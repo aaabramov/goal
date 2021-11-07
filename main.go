@@ -87,27 +87,34 @@ func main() {
 	defaultFilename := "goal.yaml"
 
 	if _, err := os.Stat(defaultFilename); errors.Is(err, os.ErrNotExist) {
-		panic(fmt.Sprintf("%s does not exist!", defaultFilename))
+		errorFatal("%s does not exist!", defaultFilename)
 	}
 
 	file, err := ioutil.ReadFile("goal.yaml")
 	if err != nil {
-		panic(err)
+		errorFatal("Failed to commands from %s file.", defaultFilename)
 	}
 	commands, _ := parseCommands(file)
 
 	if len(os.Args) == 1 {
 		commands.render()
 	} else {
+		// TODO: support several commands
 		name := strings.TrimSpace(os.Args[1])
 		command, exists := commands.get(name)
 		if exists {
 			exec(command)
 		} else {
-			_, _ = os.Stderr.WriteString("No such command in goal.yaml: " + name + "\n")
+			errorFatal("No such command in goal.yaml: %s", name)
 		}
 	}
 
+}
+
+func errorFatal(message string, args ...string) {
+	msg := fmt.Sprintf(message, args)
+	_, _ = os.Stderr.WriteString(msg + "\n")
+	os.Exit(1)
 }
 
 func exec(command *Command) {
@@ -119,5 +126,9 @@ func exec(command *Command) {
 
 	if err != nil {
 		fmt.Println(fmt.Sprint(err))
+		// TODO: code from child program
+		os.Exit(1)
+	} else {
+		os.Exit(0)
 	}
 }
