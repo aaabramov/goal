@@ -1,0 +1,26 @@
+start:
+  cmd: echo
+  args:
+    - -n
+    - 123
+    - 456
+  desc: starts
+
+test:
+  cmd: echo
+  args:
+    - Testing!
+  desc: tests
+
+pods:
+  cmd: kubectl
+  args:
+    - get
+    - pods
+    - -w
+  desc: kubectl get pods! [desc]
+
+wrong:
+  cmd: qqqwwweee
+  args:
+  desc: should fail
