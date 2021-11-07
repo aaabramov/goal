@@ -30,3 +30,5 @@ brew install #TODO
 - [ ] Global aliases in `$HOME` directory?
 - [ ] Self-autocompletion via [https://github.com/posener/complete](complete) library
 - [ ] Generate ops-doc from commands
+- [ ] Support both goal.yaml & goal.yml
+- [ ] Support `-f my-goal.yaml`
