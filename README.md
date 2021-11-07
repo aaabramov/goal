@@ -19,14 +19,14 @@ brew install #TODO
 
 # Project plan
 
-[ ] Add manual approve step
-[ ] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc.
-[ ] Add "depends on" other task like switch to dev?
-[ ] Recursive dependencies
-[ ] Assertions
-   [ ] ref output
-   [ ] recursive assertions 
-   [ ] raw CLI output -- bad pattern?
-[ ] Global aliases in `$HOME` directory?
-[ ] Self-autocompletion via [https://github.com/posener/complete](complete) library
-[ ] Generate ops-doc from commands
+- [ ] Add manual approve step
+- [ ] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc.
+- [ ] Add "depends on" other task like switch to dev?
+- [ ] Recursive dependencies
+- [ ] Assertions
+   - [ ] ref output
+   - [ ] recursive assertions 
+   - [ ] raw CLI output -- bad pattern?
+- [ ] Global aliases in `$HOME` directory?
+- [ ] Self-autocompletion via [https://github.com/posener/complete](complete) library
+- [ ] Generate ops-doc from commands
