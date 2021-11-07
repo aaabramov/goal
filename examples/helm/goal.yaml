@@ -1,0 +1,39 @@
+current-context:
+  desc: Current kubectl context
+  cmd: kubectl
+  args:
+    - config
+    - current-context
+
+helm-upgrade-dev-dry-run:
+  desc: Dry run upgrade on dev
+  assert:
+    name: Check if on dev cluster
+    ref: current-context
+    equals: dev-cluster
+  cmd: helm
+  args:
+    - upgrade
+    - release-name
+    - -f
+    - values.yaml
+    - -f
+    - values/dev.yaml
+    - .
+    - --dry-run
+
+helm-upgrade-dev:
+  desc: Upgrade on dev
+  assert:
+    name: Check if on dev cluster
+    ref: current-context
+    equals: dev-cluster
+  cmd: helm
+  args:
+    - upgrade
+    - release-name
+    - -f
+    - values.yaml
+    - -f
+    - values/dev.yaml
+    - .
