@@ -1,26 +1,16 @@
+workspace:
+  desc: Current terraform workspace
+  cmd: terraform
+  args:
+    - workspace
+    - show
+
 start:
-  cmd: echo
+  cmd: terraform
+  desc: startscho
+  assert:
+    name: Check if on dev workspace
+    ref: workspace
+    equals: dev1
   args:
-    - -n
-    - 123
-    - 456
-  desc: starts
-
-test:
-  cmd: echo
-  args:
-    - Testing!
-  desc: tests
-
-pods:
-  cmd: kubectl
-  args:
-    - get
-    - pods
-    - -w
-  desc: kubectl get pods! [desc]
-
-wrong:
-  cmd: qqqwwweee
-  args:
-  desc: should fail
+    - Success
