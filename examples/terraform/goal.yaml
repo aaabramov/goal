@@ -1,0 +1,26 @@
+workspace:
+  desc: Current terraform workspace
+  cmd: terraform
+  args:
+    - workspace
+    - show
+
+tf-plan-dev:
+  desc: Terraform plan for dev
+  assert:
+    name: Check if on dev workspace
+    ref: workspace
+    equals: dev
+  cmd: terraform
+  args:
+    - plan
+
+tf-apply-dev:
+  desc: Terraform apply for dev
+  assert:
+    name: Check if on dev workspace
+    ref: workspace
+    equals: dev
+  cmd: terraform
+  args:
+    - plan
