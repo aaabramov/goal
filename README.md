@@ -1,4 +1,4 @@
-## goal - Go Aliases
+## Go Aliases
 
 Allows you to create local aliases withing directory/repository with proper assertions upon executions.
 
