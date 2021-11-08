@@ -200,7 +200,8 @@ func normalizeArgs(args []string) []string {
 	}
 }
 
-func parseEnvCommands(name string, envs map[string]YamlEnvGoal) (commands []Command) {
+func parseEnvCommands(name string, envs map[string]YamlEnvGoal) []Command {
+	var commands []Command
 	for env, envCommand := range envs {
 		args := normalizeArgs(envCommand.Args)
 		commands = append(commands, Command{
@@ -212,8 +213,7 @@ func parseEnvCommands(name string, envs map[string]YamlEnvGoal) (commands []Comm
 			Env:    env,
 		})
 	}
-	sortCommands(commands)
-	return
+	return sortCommands(commands)
 }
 
 // ParseCommands from byte input (YAML)
@@ -238,13 +238,20 @@ func ParseCommands(bytes []byte) (*Commands, error) {
 			})
 		}
 	}
-	sortCommands(res)
 
-	return &Commands{Commands: res}, nil
+	return &Commands{Commands: sortCommands(res)}, nil
 }
 
-func sortCommands(commands []Command) {
-	sort.Slice(commands, func(i, j int) bool {
-		return commands[i].Name < commands[j].Name
+func sortCommands(commands []Command) (sorted []Command) {
+	sorted = append(sorted, commands...)
+	sort.Slice(sorted, func(i, j int) bool {
+		if sorted[i].Name < sorted[j].Name {
+			return true
+		}
+		if sorted[i].Name > sorted[j].Name {
+			return false
+		}
+		return sorted[i].Env < sorted[j].Env
 	})
+	return
 }

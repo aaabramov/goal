@@ -62,7 +62,7 @@ workspace:
         - stage.tfvars
 `)},
 			want: &Commands{
-				Commands: []Command{
+				Commands: sortCommands([]Command{
 					{
 						Name:   "workspace",
 						Cmd:    "terraform",
@@ -79,7 +79,7 @@ workspace:
 						Env:    "stage",
 						Desc:   "tf apply stage",
 					},
-				},
+				}),
 			},
 			wantErr: false,
 		},
