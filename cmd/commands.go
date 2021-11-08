@@ -78,7 +78,11 @@ func (c *Commands) exec(name string, env string) {
 
 	command, exists := c.getWithEnv(name, env)
 	if exists {
-		info("⚙️  Exec %s", command.Name)
+		msg := fmt.Sprintf("🔨 Exec %s", command.Name)
+		if env != "" {
+			msg += " on " + env
+		}
+		info(msg)
 		if command.Assert != nil {
 			info("⌛ Check precondition: %s", command.Assert.Desc)
 			// TODO: env or !env?

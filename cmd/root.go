@@ -16,7 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -40,9 +39,6 @@ var rootCmd = &cobra.Command{
 		return res, cobra.ShellCompDirectiveNoFileComp
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		if env != "" {
-			fmt.Println("Running on " + env)
-		}
 		if len(args) > 0 {
 			commands.exec(strings.TrimSpace(args[0]), env)
 		} else {

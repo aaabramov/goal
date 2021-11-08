@@ -1,79 +1,56 @@
-# Note: this on is not implemented yet!
-date:
-  desc: Current date
-  cmd: date
-
-current-context:
-  desc: Current kubectl context
-  cmd: kubectl
+workspace:
+  desc: Current terraform workspace
+  cmd: terraform
   args:
-    - config
-    - current-context
+    - workspace
+    - show
 
-helm-dry-run:
+tf-plan:
   envs:
     dev:
-      desc: Dry run upgrade on dev
+      desc: Terraform plan on dev
       assert:
-        desc: Check if on dev cluster
-        ref: current-context
-        expect: dev-cluster
-      cmd: helm
+        desc: Check if on dev workspace
+        ref: workspace # References goal above
+        expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
+      cmd: terraform
       args:
-        - upgrade
-        - release-name
-        - -f
-        - values.yaml
-        - -f
-        - values/dev.yaml
-        - .
-        - --dry-run
+        - plan
+        - -var-file
+        - vars/dev.tfvars
     stage:
-      desc: Dry run upgrade on stage
+      desc: Terraform plan on stage
       assert:
-        desc: Check if on stage cluster
-        ref: current-context
-        expect: stage-cluster
-      cmd: helm
+        desc: Check if on stage workspace
+        ref: workspace # References goal above
+        expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
+      cmd: terraform
       args:
-        - upgrade
-        - release-name
-        - -f
-        - values.yaml
-        - -f
-        - values/stage.yaml
-        - .
-        - --dry-run
+        - plan
+        - -var-file
+        - vars/stage.tfvars
 
-helm-upgrade:
+tf-apply:
   envs:
     dev:
-      desc: Upgrade on dev
+      desc: Terraform apply on dev
       assert:
-        desc: Check if on dev cluster
-        ref: current-context
-        expect: dev-cluster
-      cmd: helm
+        desc: Check if on dev workspace
+        ref: workspace # References goal above
+        expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
+      cmd: terraform
       args:
-        - upgrade
-        - release-name
-        - -f
-        - values.yaml
-        - -f
-        - values/dev.yaml
-        - .
+        - apply
+        - -var-file
+        - vars/dev.tfvars
     stage:
-      desc: Upgrade on stage
+      desc: Terraform apply on stage
       assert:
-        desc: Check if on stage cluster
-        ref: current-context
-        expect: stage-cluster
-      cmd: helm
+        desc: Check if on stage workspace
+        ref: workspace # References goal above
+        expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
+      cmd: terraform
       args:
-        - upgrade
-        - release-name
-        - -f
-        - values.yaml
-        - -f
-        - values/stage.yaml
-        - .
+        - apply
+        - -var-file
+        - vars/stage.tfvars

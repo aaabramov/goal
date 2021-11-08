@@ -29,29 +29,55 @@ workspace:
     - workspace
     - show
 
-tf-apply-dev:
-  desc: Terraform apply on dev
-  assert:
-    desc: Check if on dev workspace
-    ref: workspace # References goal above
-    expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
-  cmd: terraform
-  args:
-    - apply
-    - -var-file
-    - vars/dev.tfvars
+tf-plan:
+  envs:
+    dev:
+      desc: Terraform plan on dev
+      assert:
+        desc: Check if on dev workspace
+        ref: workspace # References goal above
+        expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
+      cmd: terraform
+      args:
+        - plan
+        - -var-file
+        - vars/dev.tfvars
+    stage:
+      desc: Terraform plan on stage
+      assert:
+        desc: Check if on stage workspace
+        ref: workspace # References goal above
+        expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
+      cmd: terraform
+      args:
+        - plan
+        - -var-file
+        - vars/stage.tfvars
 
-tf-apply-stage:
-  desc: Terraform apply on stage
-  assert:
-    desc: Check if on stage workspace
-    ref: workspace # References goal above
-    expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
-  cmd: terraform
-  args:
-    - apply
-    - -var-file
-    - vars/stage.tfvars
+tf-apply:
+  envs:
+    dev:
+      desc: Terraform apply on dev
+      assert:
+        desc: Check if on dev workspace
+        ref: workspace # References goal above
+        expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
+      cmd: terraform
+      args:
+        - apply
+        - -var-file
+        - vars/dev.tfvars
+    stage:
+      desc: Terraform apply on stage
+      assert:
+        desc: Check if on stage workspace
+        ref: workspace # References goal above
+        expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
+      cmd: terraform
+      args:
+        - apply
+        - -var-file
+        - vars/stage.tfvars
 ```
 
 Simply type `goal` to see list of available goals and their dependencies:
@@ -59,15 +85,23 @@ Simply type `goal` to see list of available goals and their dependencies:
 ```shell
 $ goal
 Available goals:
-+----------------+--------------------------------+-----------------------------+--------------------------------+
-|      GOAL      |              CLI               |         DESCRIPTION         |           ASSERTIONS           |
-+----------------+--------------------------------+-----------------------------+--------------------------------+
-| tf-apply-dev   | terraform apply -var-file      | Terraform apply on dev      | [workspace] Check if on dev    |
-|                | vars/dev.tfvars                |                             | workspace                      |
-| tf-apply-stage | terraform apply -var-file      | Terraform apply on stage    | [workspace] Check if on stage  |
-|                | vars/stage.tfvars              |                             | workspace                      |
-| workspace      | terraform workspace show       | Current terraform workspace |                                |
-+----------------+--------------------------------+-----------------------------+--------------------------------+
++-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
+|   GOAL    | ENVIRONMENT |              CLI               |         DESCRIPTION         |           ASSERTIONS           |
++-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
+| workspace |             | terraform workspace show       | Current terraform workspace |                                |
++-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
+| tf-plan   | dev         | terraform plan -var-file       | Terraform plan on dev       | [workspace] Check if on dev    |
+|           |             | vars/dev.tfvars                |                             | workspace                      |
++-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
+| tf-plan   | stage       | terraform plan -var-file       | Terraform plan on stage     | [workspace] Check if on stage  |
+|           |             | vars/stage.tfvars              |                             | workspace                      |
++-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
+| tf-apply  | dev         | terraform apply -var-file      | Terraform apply on dev      | [workspace] Check if on dev    |
+|           |             | vars/dev.tfvars                |                             | workspace                      |
++-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
+| tf-apply  | stage       | terraform apply -var-file      | Terraform apply on stage    | [workspace] Check if on stage  |
+|           |             | vars/stage.tfvars              |                             | workspace                      |
++-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
 ```
 
 Let's see if _goal_ would allow us to apply terraform configuration on wrong environment:
@@ -75,7 +109,7 @@ Let's see if _goal_ would allow us to apply terraform configuration on wrong env
 ```shell
 $ terraform workspace show
 dev
-$ goal tf-apply-stage
+$ goal tf-apply --on stage
 ⚙️ Exec tf-apply-stage
 ⌛ Check precondition: Check if on stage workspace
 ❗ Precondition failed: workspace
