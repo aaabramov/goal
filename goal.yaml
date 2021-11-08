@@ -5,12 +5,26 @@ workspace:
     - workspace
     - show
 
-start:
-  cmd: terraform
-  desc: startscho
+tf-apply-dev:
+  desc: Terraform apply on dev
   assert:
-    name: Check if on dev workspace
-    ref: workspace
-    equals: dev1
+    desc: Check if on dev workspace
+    ref: workspace # References goal above
+    equals: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
+  cmd: terraform
   args:
-    - Success
+    - apply
+    - -var-file
+    - vars/dev.tfvars
+
+tf-apply-stage:
+  desc: Terraform apply on stage
+  assert:
+    desc: Check if on stage workspace
+    ref: workspace # References goal above
+    equals: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
+  cmd: terraform
+  args:
+    - apply
+    - -var-file
+    - vars/stage.tfvars

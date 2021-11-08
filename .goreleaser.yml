@@ -1,8 +1,5 @@
-# .goreleaser.yml
 brews:
-  - # Name template of the recipe
-    # Default to project name
-    name: goal
+  - name: goal
 
     # GitHub/GitLab repository to push the formula to
     tap:
@@ -26,7 +23,6 @@ brews:
     folder: Formula
 
     # Caveats for the user of your binary.
-    # Default is empty.
     caveats: "See https://github.com/aaabramov/goal"
 
     # Your app's homepage.
