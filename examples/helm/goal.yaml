@@ -10,7 +10,7 @@ helm-upgrade-dev-dry-run:
   assert:
     desc: Check if on dev cluster
     ref: current-context
-    equals: dev-cluster
+    expect: dev-cluster
   cmd: helm
   args:
     - upgrade
@@ -27,7 +27,7 @@ helm-upgrade-dev:
   assert:
     desc: Check if on dev cluster
     ref: current-context
-    equals: dev-cluster
+    expect: dev-cluster
   cmd: helm
   args:
     - upgrade

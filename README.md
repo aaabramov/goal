@@ -34,7 +34,7 @@ tf-apply-dev:
   assert:
     desc: Check if on dev workspace
     ref: workspace # References goal above
-    equals: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
+    expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
   cmd: terraform
   args:
     - apply
@@ -46,7 +46,7 @@ tf-apply-stage:
   assert:
     desc: Check if on stage workspace
     ref: workspace # References goal above
-    equals: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
+    expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
   cmd: terraform
   args:
     - apply
@@ -96,6 +96,7 @@ $ goal tf-apply-stage
 ## Project plan
 
 - [X] Pipe STDIN for "yes/no" inputs, etc.
+- [X] Add `assert.fix`. Display when assertion failed, e.g. `terraform workspace select dev`
 - [ ] Simpler `brew tap aaabramov/goal`
 - [ ] Manual approvals for proceeding like `assert.approval`
 - [ ] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc.

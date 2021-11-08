@@ -11,11 +11,12 @@ import (
 type Assert struct {
 	Desc   string `yaml:"desc"`
 	Ref    string `yaml:"ref"`
-	Equals string `yaml:"equals"`
+	Expect string `yaml:"expect"`
+	Fix    string `yaml:"fix"`
 }
 
 func (a Assert) String() string {
-	return fmt.Sprintf("Assert{ref:'%s',equals:'%s'}", a.Ref, a.Equals)
+	return fmt.Sprintf("Assert{ref:'%s',expect:'%s'}", a.Ref, a.Expect)
 }
 
 type YamlCommand struct {
@@ -65,14 +66,18 @@ func (c *Commands) exec(name string) {
 
 			if exists {
 				out := strings.TrimSpace(getOutput(ref))
-				if out != command.Assert.Equals {
-					fatal(
+				if out != command.Assert.Expect {
+					msg := fmt.Sprintf(
 						"Precondition failed: %s\n\tOutput:   \"%s\"\n\tExpected: \"%s\"\n\tCLI: %s",
 						ref.Name,
 						out,
-						command.Assert.Equals,
+						command.Assert.Expect,
 						ref.cli(),
 					)
+					if command.Assert.Fix != "" {
+						msg += fmt.Sprintf("\n\tFix: %s", command.Assert.Fix)
+					}
+					fatal(msg)
 				} else {
 					info("✅ Precondition: " + command.Assert.Desc)
 				}
