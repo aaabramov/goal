@@ -10,7 +10,7 @@ tf-apply-dev:
   assert:
     desc: Check if on dev workspace
     ref: workspace # References goal above
-    equals: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
+    expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
   cmd: terraform
   args:
     - apply
@@ -22,7 +22,7 @@ tf-apply-stage:
   assert:
     desc: Check if on stage workspace
     ref: workspace # References goal above
-    equals: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
+    expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
   cmd: terraform
   args:
     - apply
