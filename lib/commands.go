@@ -65,6 +65,10 @@ type Commands struct {
 func (c *Commands) get(name string) (*Command, bool) {
 	for _, command := range c.Commands {
 		if command.Name == name {
+			if command.Env != "" {
+				Fatal("%s goal is referenced as an assertion but is environment dependant." +
+					"It is not supported yet. Make it as a simple alias for now.")
+			}
 			return &command, true
 		}
 	}
@@ -74,12 +78,11 @@ func (c *Commands) get(name string) (*Command, bool) {
 func (c *Commands) GetWithEnv(name string, env string) (*Command, bool) {
 	for _, command := range c.Commands {
 		if command.Name == name {
-			if env != "" && command.Env != "" {
+			if command.Env != "" && env != "" {
 				return &command, true
-			} else {
+			} else if command.Env == "" {
 				return &command, true
 			}
-
 		}
 	}
 	return nil, false

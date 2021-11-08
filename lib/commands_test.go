@@ -226,3 +226,133 @@ func TestCommand_Cli(t *testing.T) {
 		})
 	}
 }
+
+func TestCommands_GetWithEnv(t *testing.T) {
+	type fields struct {
+		Commands []Command
+	}
+	type args struct {
+		name string
+		env  string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   *Command
+		exists bool
+	}{
+		{
+			name: "single no env, empty env",
+			fields: fields{Commands: []Command{
+				{Name: "test", Env: ""},
+			}},
+			args: args{
+				name: "test",
+				env:  "",
+			},
+			want:   &Command{Name: "test", Env: ""},
+			exists: true,
+		},
+		{
+			name: "single no env, empty env, wrong command",
+			fields: fields{Commands: []Command{
+				{Name: "test", Env: ""},
+			}},
+			args: args{
+				name: "wrong",
+				env:  "",
+			},
+			want:   nil,
+			exists: false,
+		},
+		{
+			name: "single no env, dev env, wrong command",
+			fields: fields{Commands: []Command{
+				{Name: "test", Env: ""},
+			}},
+			args: args{
+				name: "wrong",
+				env:  "dev",
+			},
+			want:   nil,
+			exists: false,
+		},
+		{
+			name: "single with env, dev env, wrong command",
+			fields: fields{Commands: []Command{
+				{Name: "test", Env: "dev"},
+			}},
+			args: args{
+				name: "wrong",
+				env:  "dev",
+			},
+			want:   nil,
+			exists: false,
+		},
+		{
+			name: "single with env, empty env",
+			fields: fields{Commands: []Command{
+				{Name: "test", Env: "dev"},
+			}},
+			args: args{
+				name: "test",
+				env:  "",
+			},
+			want:   nil,
+			exists: false,
+		},
+		{
+			name: "single with env, dev env",
+			fields: fields{Commands: []Command{
+				{Name: "test", Env: "dev"},
+			}},
+			args: args{
+				name: "test",
+				env:  "dev",
+			},
+			want:   &Command{Name: "test", Env: "dev"},
+			exists: true,
+		},
+		{
+			name: "multiple with env, no env",
+			fields: fields{Commands: []Command{
+				{Name: "test", Env: "dev"},
+				{Name: "test", Env: "stage"},
+			}},
+			args: args{
+				name: "test",
+				env:  "",
+			},
+			want:   nil,
+			exists: false,
+		},
+		{
+			name: "multiple with env, dev env",
+			fields: fields{Commands: []Command{
+				{Name: "test", Env: "dev"},
+				{Name: "test", Env: "stage"},
+			}},
+			args: args{
+				name: "test",
+				env:  "dev",
+			},
+			want:   &Command{Name: "test", Env: "dev"},
+			exists: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c := &Commands{
+				Commands: tt.fields.Commands,
+			}
+			got, got1 := c.GetWithEnv(tt.args.name, tt.args.env)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("GetWithEnv() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.exists {
+				t.Errorf("GetWithEnv() got1 = %v, want %v", got1, tt.exists)
+			}
+		})
+	}
+}
