@@ -5,21 +5,21 @@
 class Goal < Formula
   desc "Allows you to create local aliases withing directory/repository with proper assertions upon executions."
   homepage "https://github.com/aaabramov/goal"
-  version "0.0.6"
+  version "0.0.7"
   license "Apache-2.0"
 
   on_macos do
-    if Hardware::CPU.arm?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.6/goal_0.0.6_darwin_arm64.tar.gz"
-      sha256 "2f5a0a414d7310d7e45cf56232637fe7e53cdb0bbe145673b5c25b41c8816922"
+    if Hardware::CPU.intel?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.7/goal_0.0.7_darwin_amd64.tar.gz"
+      sha256 "c0f0d8fc76933773474f6058a93fdef26b3279e075aa469a983bba9e3ff4256e"
 
       def install
         bin.install "goal"
       end
     end
-    if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.6/goal_0.0.6_darwin_amd64.tar.gz"
-      sha256 "0ccf3b5107388b06555677bd17f34292395031b9504d68df45c279a3628398db"
+    if Hardware::CPU.arm?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.7/goal_0.0.7_darwin_arm64.tar.gz"
+      sha256 "9e049e7b83ee4e5c3e1d9aa4dcef93d03c15e3b22bd16ce6dc1c495bb1ae6eb1"
 
       def install
         bin.install "goal"
@@ -28,17 +28,17 @@ class Goal < Formula
   end
 
   on_linux do
-    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.6/goal_0.0.6_linux_arm64.tar.gz"
-      sha256 "4fe3207f66b71bd2033f3724f6890727d68ee79ab3a36b926d094c72a3d30858"
+    if Hardware::CPU.intel?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.7/goal_0.0.7_linux_amd64.tar.gz"
+      sha256 "daabba4fea5072cf633b7fb3cc99f582f1a82d2023e031a976f516831acfe1da"
 
       def install
         bin.install "goal"
       end
     end
-    if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.6/goal_0.0.6_linux_amd64.tar.gz"
-      sha256 "f5c10fa138de6c003c59e7a1a5f1088128c0201bedc578fb34c069cb2113ed6b"
+    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.7/goal_0.0.7_linux_arm64.tar.gz"
+      sha256 "2600008e85510775958e118109e07d2f258c7f16ca270ad6ac061773091c1280"
 
       def install
         bin.install "goal"
