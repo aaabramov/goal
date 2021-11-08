@@ -1,6 +1,6 @@
 ## Go Aliases
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/aaabramov/goal) [![Build](https://github.com/aaabramov/goal/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/aaabramov/goal/actions/workflows/build.yml) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/aaabramov/goal)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/aaabramov/goal) [![Tests](https://github.com/aaabramov/goal/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/aaabramov/goal/actions/workflows/test.yml) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/aaabramov/goal)
 
 Allows you to create local aliases withing directory/repository with proper assertions upon executions.
 
