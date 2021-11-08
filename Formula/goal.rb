@@ -5,21 +5,21 @@
 class Goal < Formula
   desc "Allows you to create local aliases withing directory/repository with proper assertions upon executions."
   homepage "https://github.com/aaabramov/goal"
-  version "0.0.4"
+  version "0.0.5"
   license "Apache-2.0"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.4/goal_0.0.4_darwin_amd64.tar.gz"
-      sha256 "eecd83e24944ae66d584101b55f74883e5de4c5e172e9b27483c01a4356cc91c"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.5/goal_0.0.5_darwin_amd64.tar.gz"
+      sha256 "11638e6412fae2f8c6993b6a2847386e30f4b650df0ba6f4fd95dee4d6c302cb"
 
       def install
         bin.install "goal"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.4/goal_0.0.4_darwin_arm64.tar.gz"
-      sha256 "26d3cbabdabce57ae0bd2124584c5ee8b7501759e186411d12b392ac722b2439"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.5/goal_0.0.5_darwin_arm64.tar.gz"
+      sha256 "20013fee0eade352af5b5278d9b95e50533e9237d3e6d2bc0e7569b989688179"
 
       def install
         bin.install "goal"
@@ -29,16 +29,16 @@ class Goal < Formula
 
   on_linux do
     if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.4/goal_0.0.4_linux_amd64.tar.gz"
-      sha256 "a4337d786d014460e9acfa18190f6d2c5f2e0aa04393c3d5352da5bff1782543"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.5/goal_0.0.5_linux_amd64.tar.gz"
+      sha256 "c824dba82cc7e9135ef38b225a451fbee74543fddafb5f0ad1518c3a8a336888"
 
       def install
         bin.install "goal"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.4/goal_0.0.4_linux_arm64.tar.gz"
-      sha256 "b1fcce15c0644e1cac8e3df05176d32c5cbcc857c11963e4a47fff82e17cd6fb"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.5/goal_0.0.5_linux_arm64.tar.gz"
+      sha256 "afbd5b61444aaf9e32af937bdf881a117655dd4abd6da33064adb4a6f9e4563b"
 
       def install
         bin.install "goal"
