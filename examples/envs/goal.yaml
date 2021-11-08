@@ -1,8 +1,3 @@
-# Note: this on is not implemented yet!
-date:
-  desc: Current date
-  cmd: date
-
 current-context:
   desc: Current kubectl context
   cmd: kubectl

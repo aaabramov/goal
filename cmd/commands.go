@@ -1,6 +1,7 @@
-package main
+package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/olekukonko/tablewriter"
 	"os"
@@ -19,12 +20,19 @@ func (a Assert) String() string {
 	return fmt.Sprintf("Assert{ref:'%s',expect:'%s'}", a.Ref, a.Expect)
 }
 
-type YamlCommand struct {
+type YamlEnvGoal struct {
 	Cmd    string   `yaml:"cmd"`
 	Args   []string `yaml:"args"`
 	Assert *Assert  `yaml:"assert"`
-	Env    string   `yaml:"env"`
 	Desc   string   `yaml:"desc"`
+}
+
+type YamlGoal struct {
+	Envs   map[string]YamlEnvGoal `yaml:"envs"`
+	Cmd    string                 `yaml:"cmd"`
+	Args   []string               `yaml:"args"`
+	Assert *Assert                `yaml:"assert"`
+	Desc   string                 `yaml:"desc"`
 }
 
 type Command struct {
@@ -41,7 +49,7 @@ func (c Command) cli() string {
 }
 
 func (c Command) String() string {
-	return fmt.Sprintf("Command{name:'%s',cli:'%s',assert:'%s'}", c.Name, c.cli(), c.Assert)
+	return fmt.Sprintf("Command{name:'%s',env:'%s',cli:'%s',assert:'%s'}", c.Name, c.Env, c.cli(), c.Assert)
 }
 
 type Commands struct {
@@ -57,13 +65,23 @@ func (c *Commands) get(name string) (*Command, bool) {
 	return nil, false
 }
 
-func (c *Commands) exec(name string) {
+func (c *Commands) getWithEnv(name string, env string) (*Command, bool) {
+	for _, command := range c.commands {
+		if command.Name == name && command.Env == env {
+			return &command, true
+		}
+	}
+	return nil, false
+}
 
-	command, exists := c.get(name)
+func (c *Commands) exec(name string, env string) {
+
+	command, exists := c.getWithEnv(name, env)
 	if exists {
 		info("⚙️  Exec %s", command.Name)
 		if command.Assert != nil {
 			info("⌛ Check precondition: %s", command.Assert.Desc)
+			// TODO: env or !env?
 			ref, exists := c.get(command.Assert.Ref)
 
 			if exists {
@@ -110,8 +128,10 @@ func (c *Commands) exec(name string) {
 func (c *Commands) render() {
 	info("Available goals:")
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"goal", "CLI", "Description", "Assertions"})
+	table.SetHeader([]string{"goal", "Environment", "CLI", "Description", "Assertions"})
+	table.SetRowLine(true)
 	table.SetHeaderColor(
+		tablewriter.Colors{tablewriter.Bold},
 		tablewriter.Colors{tablewriter.Bold},
 		tablewriter.Colors{tablewriter.Bold},
 		tablewriter.Colors{tablewriter.Bold},
@@ -119,6 +139,7 @@ func (c *Commands) render() {
 	)
 	table.SetColumnColor(
 		tablewriter.Colors{tablewriter.Bold, tablewriter.FgGreenColor},
+		tablewriter.Colors{tablewriter.Normal},
 		tablewriter.Colors{tablewriter.Normal},
 		tablewriter.Colors{tablewriter.Normal},
 		tablewriter.Colors{tablewriter.Normal},
@@ -133,8 +154,18 @@ func (c *Commands) render() {
 
 			}
 		}
-		table.Append([]string{cmd.Name, cmd.cli(), cmd.Desc, assertion})
-		//fmt.Printf("\t%s: '%s' #%s\n", cmd.Desc, cmd.cli(), cmd.Desc)
+		table.Append([]string{cmd.Name, cmd.Env, cmd.cli(), cmd.Desc, assertion})
 	}
 	table.Render()
+}
+
+func getOutput(command *Command) string {
+	cmd := osexec.Command(command.Cmd, command.Args...)
+	var output bytes.Buffer
+	cmd.Stdout = &output
+
+	// TODO: handle
+	_ = cmd.Run()
+
+	return output.String()
 }

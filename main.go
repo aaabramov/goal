@@ -1,74 +1,22 @@
+/*
+Copyright © 2021 Andrii Abramov
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 package main
 
-import (
-	"bytes"
-	"errors"
-	"gopkg.in/yaml.v2"
-	"io/ioutil"
-	"os"
-	osexec "os/exec"
-	"strings"
-)
-
-func parseCommands(bytes []byte) (*Commands, error) {
-	rawCommands := map[string]YamlCommand{}
-	err := yaml.Unmarshal(bytes, &rawCommands)
-	if err != nil {
-		return nil, err
-	}
-	var res []Command
-	for name, command := range rawCommands {
-		var args []string
-		if command.Args == nil {
-			args = []string{}
-		} else {
-			args = command.Args
-		}
-		res = append(res, Command{
-			Name:   name,
-			Cmd:    command.Cmd,
-			Args:   args,
-			Desc:   command.Desc,
-			Assert: command.Assert,
-			Env:    command.Env,
-		})
-	}
-	return &Commands{commands: res}, nil
-}
+import "github.com/aaabramov/goal/cmd"
 
 func main() {
-	// TODO: add arg parser
-	// - handle -f [file] option
-	// - handle --on [env] option and do commands.exec(name, env)
-	defaultFilename := "goal.yaml"
-
-	if _, err := os.Stat(defaultFilename); errors.Is(err, os.ErrNotExist) {
-		fatal("%s does not exist!", defaultFilename)
-	}
-
-	file, err := ioutil.ReadFile("goal.yaml")
-	if err != nil {
-		fatal("Failed to commands from %s file.", defaultFilename)
-	}
-	commands, _ := parseCommands(file)
-
-	if len(os.Args) == 1 {
-		commands.render()
-	} else {
-		// TODO: support several commands
-		name := strings.TrimSpace(os.Args[1])
-		commands.exec(name)
-	}
-
-}
-
-func getOutput(command *Command) string {
-	cmd := osexec.Command(command.Cmd, command.Args...)
-	var output bytes.Buffer
-	cmd.Stdout = &output
-
-	// TODO: handle
-	_ = cmd.Run()
-
-	return output.String()
+	cmd.Execute()
 }
