@@ -107,8 +107,7 @@ $ goal tf-apply-stage
     - [ ] raw CLI output -- bad pattern?
 - [ ] Global aliases in `$HOME` directory?
 - [ ] Self-autocompletion via [https://github.com/posener/complete](complete) library
-- [ ] Generate ops-doc from commands
 - [ ] Support both goal.yaml & goal.yml
 - [ ] Support `-f my-goal.yaml`
 - [ ] Add `goal init` which simply generated example `goal.yaml`
-- [ ] Generate simply markdown file from `goal.yaml`
+- [ ] Generate simply markdown file from `goal.yaml` (ops-doc)
