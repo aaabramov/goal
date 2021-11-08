@@ -9,7 +9,7 @@ import (
 )
 
 type Assert struct {
-	Name   string `yaml:"name"`
+	Desc   string `yaml:"desc"`
 	Ref    string `yaml:"ref"`
 	Equals string `yaml:"equals"`
 }
@@ -60,7 +60,7 @@ func (c *Commands) exec(name string) {
 	if exists {
 		info("⚙️  Exec %s", command.Name)
 		if command.Assert != nil {
-			info("⌛ Check precondition: %s", command.Assert.Name)
+			info("⌛ Check precondition: %s", command.Assert.Desc)
 			ref, exists := c.get(command.Assert.Ref)
 
 			if exists {
@@ -74,7 +74,7 @@ func (c *Commands) exec(name string) {
 						ref.cli(),
 					)
 				} else {
-					info("✅ Precondition: " + command.Assert.Name)
+					info("✅ Precondition: " + command.Assert.Desc)
 				}
 			} else {
 				fatal("Unknown assertion ref: %s", command.Assert.Ref)
@@ -84,7 +84,7 @@ func (c *Commands) exec(name string) {
 		cmd := osexec.Command(command.Cmd, command.Args...)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
-
+		cmd.Stdin = os.Stdin
 		err := cmd.Run()
 
 		if err != nil {
@@ -101,9 +101,9 @@ func (c *Commands) exec(name string) {
 }
 
 func (c *Commands) render() {
-	info("Available commands:")
+	info("Available goals:")
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Name", "CLI", "Description", "Assertions"})
+	table.SetHeader([]string{"goal", "CLI", "Description", "Assertions"})
 	table.SetHeaderColor(
 		tablewriter.Colors{tablewriter.Bold},
 		tablewriter.Colors{tablewriter.Bold},
@@ -119,10 +119,15 @@ func (c *Commands) render() {
 	for _, cmd := range c.commands {
 		assertion := ""
 		if cmd.Assert != nil {
-			assertion = cmd.Assert.Name
+			ref, exists := c.get(cmd.Assert.Ref)
+			if exists {
+				assertion = fmt.Sprintf("[%s] %s", ref.Name, cmd.Assert.Desc)
+			} else {
+
+			}
 		}
 		table.Append([]string{cmd.Name, cmd.cli(), cmd.Desc, assertion})
-		//fmt.Printf("\t%s: '%s' #%s\n", cmd.Name, cmd.cli(), cmd.Desc)
+		//fmt.Printf("\t%s: '%s' #%s\n", cmd.Desc, cmd.cli(), cmd.Desc)
 	}
 	table.Render()
 }
