@@ -66,8 +66,8 @@ func (c *Commands) get(name string) (*Command, bool) {
 	for _, command := range c.Commands {
 		if command.Name == name {
 			if command.Env != "" {
-				Fatal("%s goal is referenced as an assertion but is environment dependant." +
-					"It is not supported yet. Make it as a simple alias for now.")
+				Fatal("%s goal is referenced as an assertion but is environment dependant."+
+					"It is not supported yet. Make it as a simple alias for now.", name)
 			}
 			return &command, true
 		}
