@@ -20,7 +20,6 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"os"
 	"strings"
 )
 
@@ -118,12 +117,12 @@ func loadGoals() {
 	if goalFile != "" {
 		bytes, err := ioutil.ReadFile(goalFile)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, "Failed to read goal file:", goalFile)
+			fatal("Failed to read goals file: %s", goalFile)
 		}
 		if err := parseCommands(bytes); err != nil {
-			fmt.Fprintln(os.Stderr, "Invalid goal file:", goalFile)
+			fatal("Invalid goals file: %s", goalFile)
 		}
 	} else {
-		fmt.Fprintln(os.Stderr, "Empty goal file:", goalFile)
+		fatal("Goals filename not specified. Either create goal.yaml file or specify location explicitly with -c option")
 	}
 }

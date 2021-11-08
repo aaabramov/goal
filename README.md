@@ -97,18 +97,18 @@ $ goal tf-apply-stage
 
 - [X] Pipe STDIN for "yes/no" inputs, etc.
 - [X] Add `assert.fix`. Display when assertion failed, e.g. `terraform workspace select dev`
+- [X] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc. E.g. `goal tf-apply --on dev` & `goal.env: dev` matches
+- [X] Support `-f my-goal.yaml`
 - [ ] Simpler `brew tap aaabramov/goal`
 - [ ] Manual approvals for proceeding like `assert.approval`
-- [ ] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc. E.g. `goal tf-apply --on dev` & `goal.env: dev` matches
 - [ ] Add "depends on" other task like switch to dev?
-- [ ] Recursive dependencies
+  - [ ] Recursive dependencies
 - [ ] Assertions
     - [ ] ref output
-    - [ ] recursive assertions
+    - [ ] recursive assertions?
     - [ ] raw CLI output -- bad pattern?
 - [ ] Global aliases in `$HOME` directory?
 - [ ] Self-autocompletion via [https://github.com/posener/complete](complete) library
 - [ ] Support both goal.yaml & goal.yml
-- [ ] Support `-f my-goal.yaml`
 - [ ] Add `goal init` which simply generated example `goal.yaml`
-- [ ] Generate simply markdown file from `goal.yaml` (ops-doc)
+- [ ] Generate simple markdown file from `goal.yaml` (ops-doc)
