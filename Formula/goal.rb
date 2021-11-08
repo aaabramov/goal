@@ -5,21 +5,21 @@
 class Goal < Formula
   desc "Allows you to create local aliases withing directory/repository with proper assertions upon executions."
   homepage "https://github.com/aaabramov/goal"
-  version "0.0.5"
+  version "0.0.6"
   license "Apache-2.0"
 
   on_macos do
-    if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.5/goal_0.0.5_darwin_amd64.tar.gz"
-      sha256 "11638e6412fae2f8c6993b6a2847386e30f4b650df0ba6f4fd95dee4d6c302cb"
+    if Hardware::CPU.arm?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.6/goal_0.0.6_darwin_arm64.tar.gz"
+      sha256 "2f5a0a414d7310d7e45cf56232637fe7e53cdb0bbe145673b5c25b41c8816922"
 
       def install
         bin.install "goal"
       end
     end
-    if Hardware::CPU.arm?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.5/goal_0.0.5_darwin_arm64.tar.gz"
-      sha256 "20013fee0eade352af5b5278d9b95e50533e9237d3e6d2bc0e7569b989688179"
+    if Hardware::CPU.intel?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.6/goal_0.0.6_darwin_amd64.tar.gz"
+      sha256 "0ccf3b5107388b06555677bd17f34292395031b9504d68df45c279a3628398db"
 
       def install
         bin.install "goal"
@@ -28,17 +28,17 @@ class Goal < Formula
   end
 
   on_linux do
-    if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.5/goal_0.0.5_linux_amd64.tar.gz"
-      sha256 "c824dba82cc7e9135ef38b225a451fbee74543fddafb5f0ad1518c3a8a336888"
+    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.6/goal_0.0.6_linux_arm64.tar.gz"
+      sha256 "4fe3207f66b71bd2033f3724f6890727d68ee79ab3a36b926d094c72a3d30858"
 
       def install
         bin.install "goal"
       end
     end
-    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.5/goal_0.0.5_linux_arm64.tar.gz"
-      sha256 "afbd5b61444aaf9e32af937bdf881a117655dd4abd6da33064adb4a6f9e4563b"
+    if Hardware::CPU.intel?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.6/goal_0.0.6_linux_amd64.tar.gz"
+      sha256 "f5c10fa138de6c003c59e7a1a5f1088128c0201bedc578fb34c069cb2113ed6b"
 
       def install
         bin.install "goal"
