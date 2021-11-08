@@ -95,13 +95,12 @@ $ goal tf-apply-stage
 
 ## Project plan
 
-- [ ] Pipe STDIN for "yes/no" inputs, etc.
+- [X] Pipe STDIN for "yes/no" inputs, etc.
 - [ ] Simpler `brew tap aaabramov/goal`
-- [ ] Add manual approve step
+- [ ] Manual approvals for proceeding like `assert.approval`
 - [ ] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc.
 - [ ] Add "depends on" other task like switch to dev?
 - [ ] Recursive dependencies
-- [ ] Manual approvals for proceeding
 - [ ] Assertions
     - [ ] ref output
     - [ ] recursive assertions
