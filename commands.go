@@ -23,6 +23,7 @@ type YamlCommand struct {
 	Cmd    string   `yaml:"cmd"`
 	Args   []string `yaml:"args"`
 	Assert *Assert  `yaml:"assert"`
+	Env    string   `yaml:"env"`
 	Desc   string   `yaml:"desc"`
 }
 
@@ -31,6 +32,7 @@ type Command struct {
 	Cmd    string
 	Args   []string
 	Assert *Assert
+	Env    string
 	Desc   string
 }
 

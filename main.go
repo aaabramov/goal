@@ -30,13 +30,16 @@ func parseCommands(bytes []byte) (*Commands, error) {
 			Args:   args,
 			Desc:   command.Desc,
 			Assert: command.Assert,
+			Env:    command.Env,
 		})
 	}
 	return &Commands{commands: res}, nil
 }
 
 func main() {
-
+	// TODO: add arg parser
+	// - handle -f [file] option
+	// - handle --on [env] option and do commands.exec(name, env)
 	defaultFilename := "goal.yaml"
 
 	if _, err := os.Stat(defaultFilename); errors.Is(err, os.ErrNotExist) {

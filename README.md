@@ -99,7 +99,7 @@ $ goal tf-apply-stage
 - [X] Add `assert.fix`. Display when assertion failed, e.g. `terraform workspace select dev`
 - [ ] Simpler `brew tap aaabramov/goal`
 - [ ] Manual approvals for proceeding like `assert.approval`
-- [ ] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc.
+- [ ] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc. E.g. `goal tf-apply --on dev` & `goal.env: dev` matches
 - [ ] Add "depends on" other task like switch to dev?
 - [ ] Recursive dependencies
 - [ ] Assertions
