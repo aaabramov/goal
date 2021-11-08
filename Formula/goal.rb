@@ -5,21 +5,21 @@
 class Goal < Formula
   desc "Use your aliases safely"
   homepage "https://github.com/aaabramov/goal"
-  version "0.0.2"
+  version "0.0.3"
   license "Apache-2.0"
 
   on_macos do
-    if Hardware::CPU.arm?
-      url "http://github.com/aaabramov/goal/releases/0.0.2/goal_0.0.2_darwin_arm64.tar.gz"
-      sha256 "21ff466ffa4a051882cf0e7d65fded82232282c6566e6bea548f64a113f465ca"
+    if Hardware::CPU.intel?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.3/goal_0.0.3_darwin_amd64.tar.gz"
+      sha256 "32c580960a5628214447f11d672848bdcd8dcbd86181952c2c3b9756a4b1dc02"
 
       def install
         bin.install "goal"
       end
     end
-    if Hardware::CPU.intel?
-      url "http://github.com/aaabramov/goal/releases/0.0.2/goal_0.0.2_darwin_amd64.tar.gz"
-      sha256 "cdec04526f283a76f3de337318184dc99824d9863d3f96902a124f83e387b549"
+    if Hardware::CPU.arm?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.3/goal_0.0.3_darwin_arm64.tar.gz"
+      sha256 "08afa8a0db1488bc51029659c2bb7b8e9c1a91182947f5b3fad54110f08fa62b"
 
       def install
         bin.install "goal"
@@ -29,16 +29,16 @@ class Goal < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "http://github.com/aaabramov/goal/releases/0.0.2/goal_0.0.2_linux_arm64.tar.gz"
-      sha256 "0aefb7acd78b1685d9cac3240469247ab23715868ddbf1e42b342419f884896c"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.3/goal_0.0.3_linux_arm64.tar.gz"
+      sha256 "69420e7fc02bdc0790794d8d6b973852c5ee86b6056e60dafacd493f080aafbe"
 
       def install
         bin.install "goal"
       end
     end
     if Hardware::CPU.intel?
-      url "http://github.com/aaabramov/goal/releases/0.0.2/goal_0.0.2_linux_amd64.tar.gz"
-      sha256 "408d76e5e4d2aa990eb973b84d0ba568c7c7a6f62cb60d22074169bb27bb3202"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.3/goal_0.0.3_linux_amd64.tar.gz"
+      sha256 "b4bfe629316f4008328fa162261fc336d5a6f047039c68cb47d32ef92912d068"
 
       def install
         bin.install "goal"
