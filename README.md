@@ -112,3 +112,4 @@ $ goal tf-apply-stage
 - [ ] Support both goal.yaml & goal.yml
 - [ ] Support `-f my-goal.yaml`
 - [ ] Add `goal init` which simply generated example `goal.yaml`
+- [ ] Generate simply markdown file from `goal.yaml`
