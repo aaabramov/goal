@@ -10,7 +10,7 @@ brews:
       name: goal
       branch: master
 
-    url_template: "http://github.com/aaabramov/goal/releases/{{ .Tag }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/aaabramov/goal/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
     # Git author used to commit to the repository.
     # Defaults are shown.
