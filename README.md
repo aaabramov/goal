@@ -148,3 +148,4 @@ $ goal tf-apply --on stage
 - [ ] Support both goal.yaml & goal.yml
 - [ ] Add `goal init` which simply generated example `goal.yaml`
 - [ ] Generate simple markdown file from `goal.yaml` (ops-doc)
+- [ ] Add predefined assertions like `k8s_cluster`, `terraform_workspace`, `etc.`
