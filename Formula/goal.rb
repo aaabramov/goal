@@ -5,21 +5,21 @@
 class Goal < Formula
   desc "Allows you to create local aliases withing directory/repository with proper assertions upon executions."
   homepage "https://github.com/aaabramov/goal"
-  version "0.0.8"
+  version "0.0.9"
   license "Apache-2.0"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.8/goal_0.0.8_darwin_amd64.tar.gz"
-      sha256 "060bb1ca5f3eef06fd96853826e32afb370986e17a917bad4d0fa213c2fff8ee"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.9/goal_0.0.9_darwin_amd64.tar.gz"
+      sha256 "c6a9f9e9f8488b4c4e041bfb4ca30839067d8749c38f326cc6a7ee483310859c"
 
       def install
         bin.install "goal"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.8/goal_0.0.8_darwin_arm64.tar.gz"
-      sha256 "4158df7caa4d39161bc9d57b703eaf635523a1bdbbe34570877b4437b9370d38"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.9/goal_0.0.9_darwin_arm64.tar.gz"
+      sha256 "caf1b10a15eb5239dc3d91412e42aa9afc342de76021b4648e82cc5abf05007b"
 
       def install
         bin.install "goal"
@@ -28,17 +28,17 @@ class Goal < Formula
   end
 
   on_linux do
-    if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.8/goal_0.0.8_linux_amd64.tar.gz"
-      sha256 "0f819c0369e4030ed66a08e6fd850017c03735c8e4056f793514f1f4e3418e9d"
+    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.9/goal_0.0.9_linux_arm64.tar.gz"
+      sha256 "43ee6158d3f26c155462e7e60b9ed44ea627b233d573a1c7676004f38e9203a2"
 
       def install
         bin.install "goal"
       end
     end
-    if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.8/goal_0.0.8_linux_arm64.tar.gz"
-      sha256 "332802d4c4088f36c7d67a808cf122f2e532507dcf409c7ffb18730f9956766f"
+    if Hardware::CPU.intel?
+      url "https://github.com/aaabramov/goal/releases/download/0.0.9/goal_0.0.9_linux_amd64.tar.gz"
+      sha256 "a7bcaac2d86166b4bb2f0042e67792d5ca69f794c420c7e2d0a9fbf946f9a78e"
 
       def install
         bin.install "goal"
