@@ -29,7 +29,7 @@ brews:
     homepage: "https://github.com/aaabramov/goal"
 
     # Template of your app's description.
-    description: "Use your aliases safely"
+    description: "Allows you to create local aliases withing directory/repository with proper assertions upon executions."
 
     # SPDX identifier of your app's license.
     license: "Apache-2.0"
