@@ -11,35 +11,6 @@ import (
 	"strings"
 )
 
-type Assert struct {
-	Desc               string `yaml:"desc"`
-	Ref                string `yaml:"ref,omitempty"`
-	Expect             string `yaml:"expect"`
-	Fix                string `yaml:"fix"`
-	TerraformWorkspace string `yaml:"terraform_workspace,omitempty"`
-	KubectlContext     string `yaml:"kubectl_context,omitempty"`
-	GcloudProject      string `yaml:"gcloud_project,omitempty"`
-}
-
-func (a Assert) String() string {
-	return fmt.Sprintf("Assert{desc:'%s',ref:'%s',expect:'%s',fix:'%s'}", a.Desc, a.Ref, a.Expect, a.Fix)
-}
-
-type YamlEnvGoal struct {
-	Cmd    string   `yaml:"cmd"`
-	Args   []string `yaml:"args,omitempty"`
-	Assert []Assert `yaml:"assert,omitempty"`
-	Desc   string   `yaml:"desc"`
-}
-
-type YamlGoal struct {
-	Envs   *map[string]YamlEnvGoal `yaml:"envs,omitempty"`
-	Cmd    string                  `yaml:"cmd,omitempty"`
-	Args   []string                `yaml:"args,omitempty"`
-	Assert []Assert                `yaml:"assert,omitempty"`
-	Desc   string                  `yaml:"desc,omitempty"`
-}
-
 type Goal struct {
 	Name   string
 	Cmd    string
@@ -178,7 +149,7 @@ func normalizeArgs(args []string) []string {
 	}
 }
 
-func mkAssertions(args []Assert) (assertions []Assertion) {
+func mkAssertions(args []YamlAssert) (assertions []Assertion) {
 	if args == nil {
 		return assertions
 	} else {
@@ -208,7 +179,7 @@ func mkAssertions(args []Assert) (assertions []Assertion) {
 	}
 }
 
-func validateAssert(goal string, env string, idx int, assert Assert) {
+func validateAssert(goal string, env string, idx int, assert YamlAssert) {
 	var err string
 	if assert.Ref == "" && assert.TerraformWorkspace == "" && assert.KubectlContext == "" && assert.GcloudProject == "" {
 		err = fmt.Sprintf("one of [%s] must be specified for asserion", strings.Join(availableAssertions, ", "))

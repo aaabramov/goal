@@ -51,7 +51,7 @@ func loadGoals() {
 		}
 		parsed, err := lib.ParseCommands(bytes)
 		if err != nil {
-			lib.Fatal("❗ Invalid goals file: %s", goalFile)
+			lib.Fatal("❗ Invalid goals file: %s.\n", goalFile)
 		} else {
 			commands = parsed
 		}
