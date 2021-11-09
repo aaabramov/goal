@@ -17,6 +17,8 @@ type Assert struct {
 	Expect             string `yaml:"expect"`
 	Fix                string `yaml:"fix"`
 	TerraformWorkspace string `yaml:"terraform_workspace,omitempty"`
+	KubectlContext     string `yaml:"kubectl_context,omitempty"`
+	GcloudProject      string `yaml:"gcloud_project,omitempty"`
 }
 
 func (a Assert) String() string {
@@ -192,6 +194,14 @@ func mkAssertions(args []Assert) (assertions []Assertion) {
 				assertions = append(assertions, TerraformWorkspaceAssertion{
 					Expect: assertion.TerraformWorkspace,
 				})
+			} else if assertion.KubectlContext != "" {
+				assertions = append(assertions, KubectlContextAssertion{
+					Expect: assertion.KubectlContext,
+				})
+			} else if assertion.GcloudProject != "" {
+				assertions = append(assertions, GcloudProjectAssertion{
+					Expect: assertion.GcloudProject,
+				})
 			}
 		}
 		return assertions
@@ -200,8 +210,8 @@ func mkAssertions(args []Assert) (assertions []Assertion) {
 
 func validateAssert(goal string, env string, idx int, assert Assert) {
 	var err string
-	if assert.Ref == "" && assert.TerraformWorkspace == "" {
-		err = "either 'ref' or 'terraform_workspace' must be specified"
+	if assert.Ref == "" && assert.TerraformWorkspace == "" && assert.KubectlContext == "" && assert.GcloudProject == "" {
+		err = fmt.Sprintf("one of [%s] must be specified for asserion", strings.Join(availableAssertions, ", "))
 	}
 	if assert.Ref != "" && assert.Expect == "" {
 		err = "for 'ref' assertions specify expected output in 'expect'"

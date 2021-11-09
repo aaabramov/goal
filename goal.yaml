@@ -1,32 +1,77 @@
-tf-apply:
+# simple alias: `goal run pods`
+pods:
+  desc: Get nginx pods
+  cmd: kubectl
+  args:
+    - get
+    - pods
+    - -l
+    - app=nginx
+
+# list your workspaces with `terraform workspace list`
+terraform:
   envs:
     dev:
+      desc: Terraform apply on dev
       cmd: terraform
       args:
         - apply
         - -var-file
         - vars/dev.tfvars
       assert:
-        - desc: Check if on dev workspace
-          ref: workspace
-          expect: dev
-          fix: terraform workspace select dev
-      desc: Terraform apply on dev
+        - terraform_workspace: dev
     stage:
+      desc: Terraform apply on stage
       cmd: terraform
       args:
         - apply
         - -var-file
         - vars/stage.tfvars
       assert:
-        - desc: Check if on stage workspace
-          ref: workspace
-          expect: stage
-          fix: terraform workspace select stage
-      desc: Terraform apply on stage
-workspace:
-  cmd: terraform
-  args:
-    - apply
-    - -var-file
-    - vars/dev.tfvars
+        - terraform_workspace: stage
+
+# list your contexts with `kubectl config get-contexts`
+k8s:
+  envs:
+    dev:
+      desc: Kubectl apply on dev
+      cmd: kubectl
+      args:
+        - apply
+        - -f
+        - deployment.yaml
+      assert:
+        - kubectl_context: gke_project_region_dev
+    stage:
+      desc: Kubectl apply on stage
+      cmd: kubectl
+      args:
+        - apply
+        - -f
+        - deployment.yaml
+      assert:
+        - kubectl_context: gke_project_region_stage
+
+# list your projects with `gcloud projects list`
+gcloud:
+  envs:
+    dev:
+      desc: SSH to dev
+      cmd: gcloud
+      args:
+        - compute
+        - ssh
+        - dev-vm
+        - --zone=us-central1-c
+      assert:
+        - gcloud_project: dev-project
+    stage:
+      desc: SSH to stage
+      cmd: gcloud
+      args:
+        - compute
+        - ssh
+        - stage-vm
+        - --zone=us-central1-c
+      assert:
+        - gcloud_project: stage-project

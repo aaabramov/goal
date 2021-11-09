@@ -139,6 +139,10 @@ $ goal tf-apply --on stage
 - [X] Validate empty goal cmd
 - [X] Validate empty assertion ref
 - [X] Add `goal init` which simply generated example `goal.yaml`
+- [X] Add predefined assertions:
+    - [X] `k8s_cluster`
+    - [X] `terraform_workspace`
+    - [X] `gcloud_project`
 - [ ] Simpler `brew tap aaabramov/goal`
 - [ ] Manual approvals for proceeding like `assert.approval`
 - [ ] Add "depends on" other task like switch to dev?
@@ -152,9 +156,6 @@ $ goal tf-apply --on stage
 - [ ] Self-autocompletion via [https://github.com/posener/complete](complete) library
 - [ ] Support both goal.yaml & goal.yml
 - [ ] Generate simple markdown file from `goal.yaml` (ops-doc)
-- [ ] Add predefined assertions:
-    - [ ] `k8s_cluster`
-    - [ ] `terraform_workspace`
 - [ ] `goal add GOAL_NAME` -- check if already exists
 - [ ] rework `Fatal` with `err`
 - [ ] suggest `fix?` when precondition failed with `yes/no` prompt

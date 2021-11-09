@@ -1,18 +1,16 @@
-workspace:
-  desc: Current terraform workspace
-  cmd: terraform
-  args:
-    - workspace
-    - show
+# This example combines two `goal` features:
+# 1. Environmental executions: `goal run tf-plan --on dev`
+# 2. Built-in `terraform_workspace` assertions upon execution
+#    to prevent accidental runs on wrong environment.
+#
+# NOTE: Your can list available `terraform` workspaces with `terraform workspace list`
 
 tf-plan:
   envs:
     dev:
       desc: Terraform plan on dev
       assert:
-        desc: Check if on dev workspace
-        ref: workspace # References goal above
-        expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
+        - terraform_workspace: dev # Checks whether selected terraform workspace is "dev"
       cmd: terraform
       args:
         - plan
@@ -21,9 +19,7 @@ tf-plan:
     stage:
       desc: Terraform plan on stage
       assert:
-        desc: Check if on stage workspace
-        ref: workspace # References goal above
-        expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
+        - terraform_workspace: stage # Checks whether selected terraform workspace is "stage"
       cmd: terraform
       args:
         - plan
@@ -35,9 +31,7 @@ tf-apply:
     dev:
       desc: Terraform apply on dev
       assert:
-        desc: Check if on dev workspace
-        ref: workspace # References goal above
-        expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
+        - terraform_workspace: dev # Checks whether selected terraform workspace is "dev"
       cmd: terraform
       args:
         - apply
@@ -46,9 +40,7 @@ tf-apply:
     stage:
       desc: Terraform apply on stage
       assert:
-        desc: Check if on stage workspace
-        ref: workspace # References goal above
-        expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
+        - terraform_workspace: stage # Checks whether selected terraform workspace is "stage"
       cmd: terraform
       args:
         - apply
