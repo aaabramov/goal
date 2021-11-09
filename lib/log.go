@@ -7,7 +7,7 @@ import (
 
 func Fatal(message string, args ...interface{}) {
 	msg := fmt.Sprintf(message, args...)
-	_, _ = os.Stderr.WriteString("❗ " + msg + "\n")
+	_, _ = os.Stderr.WriteString(msg + "\n")
 	os.Exit(1)
 }
 

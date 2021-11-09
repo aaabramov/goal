@@ -6,7 +6,7 @@ Allows you to create local aliases withing directory/repository with proper asse
 
 **The idea behind is to:**
 
-- simplify executing scoped repetitive commands 
+- simplify executing scoped repetitive commands
 - avoid executing commands on wrong environment (e.g. _kubectl_, _terraform_, _helm_, _etc._)
 
 ## Install
@@ -133,7 +133,8 @@ $ goal tf-apply --on stage
 
 - [X] Pipe STDIN for "yes/no" inputs, etc.
 - [X] Add `assert.fix`. Display when assertion failed, e.g. `terraform workspace select dev`
-- [X] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc. E.g. `goal tf-apply --on dev` & `goal.env: dev` matches
+- [X] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc. E.g. `goal tf-apply --on dev`
+  & `goal.env: dev` matches
 - [X] Support `-f my-goal.yaml`
 - [X] Validate empty goal cmd
 - [X] Validate empty assertion ref
@@ -141,7 +142,7 @@ $ goal tf-apply --on stage
 - [ ] Simpler `brew tap aaabramov/goal`
 - [ ] Manual approvals for proceeding like `assert.approval`
 - [ ] Add "depends on" other task like switch to dev?
-  - [ ] Recursive dependencies
+    - [ ] Recursive dependencies
 - [ ] Assertions
     - [X] ref output
     - [X] support multiple assertions
@@ -151,5 +152,9 @@ $ goal tf-apply --on stage
 - [ ] Self-autocompletion via [https://github.com/posener/complete](complete) library
 - [ ] Support both goal.yaml & goal.yml
 - [ ] Generate simple markdown file from `goal.yaml` (ops-doc)
-- [ ] Add predefined assertions like `k8s_cluster`, `terraform_workspace`, `etc.`
+- [ ] Add predefined assertions:
+    - [ ] `k8s_cluster`
+    - [ ] `terraform_workspace`
 - [ ] `goal add GOAL_NAME` -- check if already exists
+- [ ] rework `Fatal` with `err`
+- [ ] suggest `fix?` when precondition failed with `yes/no` prompt

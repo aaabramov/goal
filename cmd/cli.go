@@ -18,7 +18,7 @@ var cliCmd = &cobra.Command{
 		if cmd, exists := commands.GetWithEnv(strings.TrimSpace(goal), env); exists {
 			lib.Info(cmd.Cli())
 		} else {
-			msg := fmt.Sprintf("No such goal: %s", goal)
+			msg := fmt.Sprintf("❗ No such goal: %s", goal)
 			if env != "" {
 				msg += fmt.Sprintf(" on env \"%s\"", env)
 			}

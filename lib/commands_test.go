@@ -14,7 +14,7 @@ func TestParseCommands(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    *Commands
+		want    *Goals
 		wantErr bool
 	}{
 		{
@@ -27,8 +27,8 @@ workspace:
     - workspace
     - show
 `)},
-			want: &Commands{
-				Commands: []Command{
+			want: &Goals{
+				Commands: []Goal{
 					{
 						Name:   "workspace",
 						Cmd:    "terraform",
@@ -61,8 +61,8 @@ workspace:
         - -var-file
         - stage.tfvars
 `)},
-			want: &Commands{
-				Commands: sortCommands([]Command{
+			want: &Goals{
+				Commands: sortCommands([]Goal{
 					{
 						Name:   "workspace",
 						Cmd:    "terraform",
@@ -89,27 +89,29 @@ workspace:
 apply:
   desc: tf apply dev
   assert:
-    desc: Check if on dev workspace
-    ref: workspace
-    expect: dev
-    fix: terraform workspace select dev
+    - desc: Check if on dev workspace
+      ref: workspace
+      expect: dev
+      fix: terraform workspace select dev
   cmd: terraform
   args:
     - apply
     - -var-file
     - dev.tfvars
 `)},
-			want: &Commands{
-				Commands: []Command{
+			want: &Goals{
+				Commands: []Goal{
 					{
 						Name: "apply",
 						Cmd:  "terraform",
 						Args: []string{"apply", "-var-file", "dev.tfvars"},
-						Assert: &Assert{
-							Desc:   "Check if on dev workspace",
-							Ref:    "workspace",
-							Expect: "dev",
-							Fix:    "terraform workspace select dev",
+						Assert: []Assertion{
+							RefAssertion{
+								Desc:   "Check if on dev workspace",
+								Ref:    "workspace",
+								Expect: "dev",
+								Fix:    "terraform workspace select dev",
+							},
 						},
 						Env:  "",
 						Desc: "tf apply dev",
@@ -126,28 +128,29 @@ apply:
     dev:
       desc: tf apply dev
       assert:
-        desc: Check if on dev workspace
-        ref: workspace
-        expect: dev
-        fix: terraform workspace select dev
+        - desc: Check if on dev workspace
+          ref: workspace
+          expect: dev
+          fix: terraform workspace select dev
       cmd: terraform
       args:
         - apply
         - -var-file
         - dev.tfvars
 `)},
-			want: &Commands{
-				Commands: []Command{
+			want: &Goals{
+				Commands: []Goal{
 					{
 						Name: "apply",
 						Cmd:  "terraform",
 						Args: []string{"apply", "-var-file", "dev.tfvars"},
-						Assert: &Assert{
-							Desc:   "Check if on dev workspace",
-							Ref:    "workspace",
-							Expect: "dev",
-							Fix:    "terraform workspace select dev",
-						},
+						Assert: []Assertion{
+							RefAssertion{
+								Desc:   "Check if on dev workspace",
+								Ref:    "workspace",
+								Expect: "dev",
+								Fix:    "terraform workspace select dev",
+							}},
 						Env:  "dev",
 						Desc: "tf apply dev",
 					},
@@ -197,7 +200,7 @@ func TestCommand_Cli(t *testing.T) {
 		Name   string
 		Cmd    string
 		Args   []string
-		Assert *Assert
+		Assert []Assertion
 		Env    string
 		Desc   string
 	}
@@ -212,7 +215,7 @@ func TestCommand_Cli(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := Command{
+			c := Goal{
 				Name:   tt.fields.Name,
 				Cmd:    tt.fields.Cmd,
 				Args:   tt.fields.Args,
@@ -229,7 +232,7 @@ func TestCommand_Cli(t *testing.T) {
 
 func TestCommands_GetWithEnv(t *testing.T) {
 	type fields struct {
-		Commands []Command
+		Commands []Goal
 	}
 	type args struct {
 		name string
@@ -239,24 +242,24 @@ func TestCommands_GetWithEnv(t *testing.T) {
 		name   string
 		fields fields
 		args   args
-		want   *Command
+		want   *Goal
 		exists bool
 	}{
 		{
 			name: "single no env, empty env",
-			fields: fields{Commands: []Command{
+			fields: fields{Commands: []Goal{
 				{Name: "test", Env: ""},
 			}},
 			args: args{
 				name: "test",
 				env:  "",
 			},
-			want:   &Command{Name: "test", Env: ""},
+			want:   &Goal{Name: "test", Env: ""},
 			exists: true,
 		},
 		{
 			name: "single no env, empty env, wrong command",
-			fields: fields{Commands: []Command{
+			fields: fields{Commands: []Goal{
 				{Name: "test", Env: ""},
 			}},
 			args: args{
@@ -268,7 +271,7 @@ func TestCommands_GetWithEnv(t *testing.T) {
 		},
 		{
 			name: "single no env, dev env, wrong command",
-			fields: fields{Commands: []Command{
+			fields: fields{Commands: []Goal{
 				{Name: "test", Env: ""},
 			}},
 			args: args{
@@ -280,7 +283,7 @@ func TestCommands_GetWithEnv(t *testing.T) {
 		},
 		{
 			name: "single with env, dev env, wrong command",
-			fields: fields{Commands: []Command{
+			fields: fields{Commands: []Goal{
 				{Name: "test", Env: "dev"},
 			}},
 			args: args{
@@ -292,7 +295,7 @@ func TestCommands_GetWithEnv(t *testing.T) {
 		},
 		{
 			name: "single with env, empty env",
-			fields: fields{Commands: []Command{
+			fields: fields{Commands: []Goal{
 				{Name: "test", Env: "dev"},
 			}},
 			args: args{
@@ -304,19 +307,19 @@ func TestCommands_GetWithEnv(t *testing.T) {
 		},
 		{
 			name: "single with env, dev env",
-			fields: fields{Commands: []Command{
+			fields: fields{Commands: []Goal{
 				{Name: "test", Env: "dev"},
 			}},
 			args: args{
 				name: "test",
 				env:  "dev",
 			},
-			want:   &Command{Name: "test", Env: "dev"},
+			want:   &Goal{Name: "test", Env: "dev"},
 			exists: true,
 		},
 		{
 			name: "multiple with env, no env",
-			fields: fields{Commands: []Command{
+			fields: fields{Commands: []Goal{
 				{Name: "test", Env: "dev"},
 				{Name: "test", Env: "stage"},
 			}},
@@ -329,7 +332,7 @@ func TestCommands_GetWithEnv(t *testing.T) {
 		},
 		{
 			name: "multiple with env, dev env",
-			fields: fields{Commands: []Command{
+			fields: fields{Commands: []Goal{
 				{Name: "test", Env: "dev"},
 				{Name: "test", Env: "stage"},
 			}},
@@ -337,13 +340,13 @@ func TestCommands_GetWithEnv(t *testing.T) {
 				name: "test",
 				env:  "dev",
 			},
-			want:   &Command{Name: "test", Env: "dev"},
+			want:   &Goal{Name: "test", Env: "dev"},
 			exists: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c := &Commands{
+			c := &Goals{
 				Commands: tt.fields.Commands,
 			}
 			got, got1 := c.GetWithEnv(tt.args.name, tt.args.env)

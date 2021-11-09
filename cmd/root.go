@@ -7,7 +7,7 @@ import (
 )
 
 var goalFile string
-var commands *lib.Commands
+var commands *lib.Goals
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -44,18 +44,18 @@ func loadGoals() {
 	if goalFile != "" {
 		bytes, err := ioutil.ReadFile(goalFile)
 		if err != nil {
-			lib.Fatal("Failed to read goals file: %s\n"+
+			lib.Fatal("❗ Failed to read goals file: %s\n"+
 				"\t- check if goal.yaml files exists in current directory\n"+
 				"\t- specify goal.yaml explicitly using -c flag, e.g. 'goal -c ../goal.yaml'\n"+
 				"\t- run 'goal init' to generate example goal.yaml file in current directory", goalFile)
 		}
 		parsed, err := lib.ParseCommands(bytes)
 		if err != nil {
-			lib.Fatal("Invalid goals file: %s", goalFile)
+			lib.Fatal("❗ Invalid goals file: %s", goalFile)
 		} else {
 			commands = parsed
 		}
 	} else {
-		lib.Fatal("Goals filename not specified. Either create goal.yaml file or specify location explicitly with -c option")
+		lib.Fatal("❗ Goals filename not specified. Either create goal.yaml file or specify location explicitly with -c option")
 	}
 }

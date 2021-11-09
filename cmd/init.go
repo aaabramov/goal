@@ -63,10 +63,10 @@ func initGoals(filename string) {
 	lib.Info("⌛ Generating default %s file", filename)
 	bytes, err := yaml.Marshal(defaultGoals)
 	if err != nil {
-		lib.Fatal("Failed to generate default YAML for goals")
+		lib.Fatal("❗ Failed to generate default YAML for goals")
 	}
 	if err = ioutil.WriteFile(filename, bytes, 0644); err != nil {
-		lib.Fatal("Failed to create %s", filename)
+		lib.Fatal("❗ Failed to create %s", filename)
 	}
 	lib.Info("✅ Generated default %s file. Try running `goal` to see available goals.", filename)
 }

@@ -12,10 +12,11 @@ import (
 )
 
 type Assert struct {
-	Desc   string `yaml:"desc"`
-	Ref    string `yaml:"ref"`
-	Expect string `yaml:"expect"`
-	Fix    string `yaml:"fix"`
+	Desc               string `yaml:"desc"`
+	Ref                string `yaml:"ref,omitempty"`
+	Expect             string `yaml:"expect"`
+	Fix                string `yaml:"fix"`
+	TerraformWorkspace string `yaml:"terraform_workspace,omitempty"`
 }
 
 func (a Assert) String() string {
@@ -37,16 +38,16 @@ type YamlGoal struct {
 	Desc   string                  `yaml:"desc,omitempty"`
 }
 
-type Command struct {
+type Goal struct {
 	Name   string
 	Cmd    string
 	Args   []string
-	Assert []Assert
+	Assert []Assertion
 	Env    string
 	Desc   string
 }
 
-func (c Command) Cli() string {
+func (c Goal) Cli() string {
 	if len(c.Args) == 0 {
 		return c.Cmd
 	} else {
@@ -54,19 +55,19 @@ func (c Command) Cli() string {
 	}
 }
 
-func (c Command) String() string {
-	return fmt.Sprintf("Command{name:'%s',env:'%v',Cli:'%s',assert:'%s'}", c.Name, c.Env, c.Cli(), c.Assert)
+func (c Goal) String() string {
+	return fmt.Sprintf("Goal{name:'%s',env:'%v',Cli:'%s',assert:'%s'}", c.Name, c.Env, c.Cli(), c.Assert)
 }
 
-type Commands struct {
-	Commands []Command
+type Goals struct {
+	Commands []Goal
 }
 
-func (c *Commands) get(name string) (*Command, bool) {
+func (c *Goals) get(name string) (*Goal, bool) {
 	for _, command := range c.Commands {
 		if command.Name == name {
 			if command.Env != "" {
-				Fatal("%s goal is referenced as an assertion but is environment dependant."+
+				Fatal("❗ %s goal is referenced as an assertion but is environment dependant."+
 					"It is not supported yet. Make it as a simple alias for now.", name)
 			}
 			return &command, true
@@ -75,7 +76,7 @@ func (c *Commands) get(name string) (*Command, bool) {
 	return nil, false
 }
 
-func (c *Commands) GetWithEnv(name string, env string) (*Command, bool) {
+func (c *Goals) GetWithEnv(name string, env string) (*Goal, bool) {
 	for _, command := range c.Commands {
 		if command.Name == name {
 			if command.Env != "" && env != "" {
@@ -88,34 +89,7 @@ func (c *Commands) GetWithEnv(name string, env string) (*Command, bool) {
 	return nil, false
 }
 
-func (c *Commands) runAssertion(assert Assert) {
-	Info("⌛ Check precondition: %s", assert.Desc)
-	// TODO: env or !env?
-	ref, exists := c.get(assert.Ref)
-
-	if exists {
-		out := strings.TrimSpace(getOutput(ref))
-		if out != assert.Expect {
-			msg := fmt.Sprintf(
-				"Precondition failed: %s\n\tOutput:   \"%s\"\n\tExpected: \"%s\"\n\tCLI: %s",
-				ref.Name,
-				out,
-				assert.Expect,
-				ref.Cli(),
-			)
-			if assert.Fix != "" {
-				msg += fmt.Sprintf("\n\tFix: %s", assert.Fix)
-			}
-			Fatal(msg)
-		} else {
-			Info("✅ Precondition: " + assert.Desc)
-		}
-	} else {
-		Fatal("Unknown assertion ref: %s", assert.Ref)
-	}
-}
-
-func (c *Commands) Exec(name string, env string) {
+func (c *Goals) Exec(name string, env string) {
 
 	command, exists := c.GetWithEnv(name, env)
 	if exists {
@@ -125,7 +99,11 @@ func (c *Commands) Exec(name string, env string) {
 		}
 		Info(msg)
 		for _, assert := range command.Assert {
-			c.runAssertion(assert)
+			Info("⌛ Check precondition: %s", assert.describe())
+			if err := assert.check(*c); err != nil {
+				Fatal(err.Error())
+			}
+			Info("✅ Precondition: %s" + assert.describe())
 		}
 
 		cmd := osexec.Command(command.Cmd, command.Args...)
@@ -142,12 +120,12 @@ func (c *Commands) Exec(name string, env string) {
 			os.Exit(0)
 		}
 	} else {
-		Fatal("No such command in goal.yaml: %s", name)
+		Fatal("❗ No such command in goal.yaml: %s", name)
 	}
 
 }
 
-func (c *Commands) Render() {
+func (c *Goals) Render() {
 	Info("Available goals:")
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"goal", "Environment", "CLI", "Description", "Assertions"})
@@ -172,20 +150,15 @@ func (c *Commands) Render() {
 		var assertions []string
 
 		for _, assert := range cmd.Assert {
-			ref, exists := c.get(assert.Ref)
-			if exists {
-				assertions = append(assertions, fmt.Sprintf("- [%s] %s", ref.Name, assert.Desc))
-			} else {
-
-			}
+			assertions = append(assertions, assert.describe())
 		}
 		table.Append([]string{cmd.Name, cmd.Env, cmd.Cli(), cmd.Desc, strings.Join(assertions, "\n")})
 	}
 	table.Render()
 }
 
-func getOutput(command *Command) string {
-	cmd := osexec.Command(command.Cmd, command.Args...)
+func getOutput(name string, args ...string) string {
+	cmd := osexec.Command(name, args...)
 	var output bytes.Buffer
 	cmd.Stdout = &output
 
@@ -203,40 +176,64 @@ func normalizeArgs(args []string) []string {
 	}
 }
 
-func normalizeAsserts(args []Assert) []Assert {
+func mkAssertions(args []Assert) (assertions []Assertion) {
 	if args == nil {
-		return []Assert{}
+		return assertions
 	} else {
-		return args
+		for _, assertion := range args {
+			if assertion.Ref != "" {
+				assertions = append(assertions, RefAssertion{
+					Desc:   assertion.Desc,
+					Ref:    assertion.Ref,
+					Expect: assertion.Expect,
+					Fix:    assertion.Fix,
+				})
+			} else if assertion.TerraformWorkspace != "" {
+				assertions = append(assertions, TerraformWorkspaceAssertion{
+					Expect: assertion.TerraformWorkspace,
+				})
+			}
+		}
+		return assertions
 	}
 }
 
-func validateAssert(name string, env string, assert Assert) {
-	if assert.Ref == "" {
+func validateAssert(goal string, env string, idx int, assert Assert) {
+	var err string
+	if assert.Ref == "" && assert.TerraformWorkspace == "" {
+		err = "either 'ref' or 'terraform_workspace' must be specified"
+	}
+	if assert.Ref != "" && assert.Expect == "" {
+		err = "for 'ref' assertions specify expected output in 'expect'"
+	}
+
+	if err == "" {
+		return
+	} else {
 		if env == "" {
-			Fatal("Malformed goals. %s.assert.ref could not be empty", name)
+			Fatal(fmt.Sprintf("❗ Malformed %s.assert.%d: %s", goal, idx, err))
 		} else {
-			Fatal("Malformed goals. %s.%s.assert.ref could not be empty", name, env)
+			Fatal(fmt.Sprintf("❗ Malformed %s.%s.assert.%d: %s", goal, env, idx, err))
 		}
 	}
 }
 
-func parseEnvCommands(name string, envs map[string]YamlEnvGoal) []Command {
-	var commands []Command
+func parseEnvCommands(goal string, envs map[string]YamlEnvGoal) []Goal {
+	var commands []Goal
 	for env, envCommand := range envs {
 		args := normalizeArgs(envCommand.Args)
 		if envCommand.Cmd == "" {
-			Fatal("Malformed goals. %s.%s.cmd could not be empty", name, env)
+			Fatal("❗ Malformed goals. %s.%s.cmd could not be empty", goal, env)
 		}
-		for _, assert := range envCommand.Assert {
-			validateAssert(name, env, assert)
+		for idx, assert := range envCommand.Assert {
+			validateAssert(goal, env, idx, assert)
 		}
-		commands = append(commands, Command{
-			Name:   name,
+		commands = append(commands, Goal{
+			Name:   goal,
 			Cmd:    envCommand.Cmd,
 			Args:   args,
 			Desc:   envCommand.Desc,
-			Assert: normalizeAsserts(envCommand.Assert),
+			Assert: mkAssertions(envCommand.Assert),
 			Env:    env,
 		})
 	}
@@ -244,35 +241,35 @@ func parseEnvCommands(name string, envs map[string]YamlEnvGoal) []Command {
 }
 
 // ParseCommands from byte input (YAML)
-func ParseCommands(bytes []byte) (*Commands, error) {
+func ParseCommands(bytes []byte) (*Goals, error) {
 
 	rawCommands := map[string]YamlGoal{}
 	if err := yaml.Unmarshal(bytes, &rawCommands); err != nil {
 		return nil, err
 	}
-	var res []Command
+	var res []Goal
 	for name, command := range rawCommands {
 		if command.Envs != nil {
 			res = append(res, parseEnvCommands(name, *command.Envs)...)
 		} else {
-			for _, assert := range command.Assert {
-				validateAssert(name, "", assert)
+			for idx, assert := range command.Assert {
+				validateAssert(name, "", idx, assert)
 			}
 			args := normalizeArgs(command.Args)
-			res = append(res, Command{
+			res = append(res, Goal{
 				Name:   name,
 				Cmd:    command.Cmd,
 				Args:   args,
 				Desc:   command.Desc,
-				Assert: command.Assert,
+				Assert: mkAssertions(command.Assert),
 			})
 		}
 	}
 
-	return &Commands{Commands: sortCommands(res)}, nil
+	return &Goals{Commands: sortCommands(res)}, nil
 }
 
-func sortCommands(commands []Command) (sorted []Command) {
+func sortCommands(commands []Goal) (sorted []Goal) {
 	sorted = append(sorted, commands...)
 	sort.Slice(sorted, func(i, j int) bool {
 		if sorted[i].Name < sorted[j].Name {
