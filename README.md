@@ -143,7 +143,7 @@ $ goal tf-apply --on stage
 - [ ] Add "depends on" other task like switch to dev?
   - [ ] Recursive dependencies
 - [ ] Assertions
-    - [ ] ref output
+    - [X] ref output
     - [ ] recursive assertions?
     - [ ] raw CLI output -- bad pattern?
 - [ ] Global aliases in `$HOME` directory?

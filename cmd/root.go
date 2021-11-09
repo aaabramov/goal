@@ -44,7 +44,10 @@ func loadGoals() {
 	if goalFile != "" {
 		bytes, err := ioutil.ReadFile(goalFile)
 		if err != nil {
-			lib.Fatal("Failed to read goals file: %s", goalFile)
+			lib.Fatal("Failed to read goals file: %s\n"+
+				"\t- check if goal.yaml files exists in current directory\n"+
+				"\t- specify goal.yaml explicitly using -c flag, e.g. 'goal -c ../goal.yaml'\n"+
+				"\t- run 'goal init' to generate example goal.yaml file in current directory", goalFile)
 		}
 		parsed, err := lib.ParseCommands(bytes)
 		if err != nil {
