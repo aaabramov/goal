@@ -152,6 +152,7 @@ func (c *Commands) Render() {
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"goal", "Environment", "CLI", "Description", "Assertions"})
 	table.SetRowLine(true)
+	table.SetAutoMergeCells(true)
 	table.SetHeaderColor(
 		tablewriter.Colors{tablewriter.Bold},
 		tablewriter.Colors{tablewriter.Bold},
