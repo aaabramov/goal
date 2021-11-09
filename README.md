@@ -4,10 +4,11 @@
 
 Allows you to create local aliases withing directory/repository with proper assertions upon executions.
 
-**The idea behind is to:**
+**Motivation:**
 
-- simplify executing scoped repetitive commands
-- avoid executing commands on wrong environment (e.g. _kubectl_, _terraform_, _helm_, _etc._)
+- Simplify executing scoped repetitive commands
+- Avoid executing commands on wrong environment (e.g. _kubectl_, _terraform_, _helm_, _etc._)
+- Automatically generate OpsDoc from available goals. No need to read through whole README file to start operating on your infrastructure.
 
 ## Install
 
@@ -21,66 +22,9 @@ brew install aaabramov/goal/goal
 
 ## Usage
 
-Create `goal.yaml` file in directory where aliases will be used:
+Run `goal init` in directory where aliases will be used. This will generate example `goal.yaml` file. Use it as a reference to define your own aliases. 
 
-```yaml
-workspace:
-  desc: Current terraform workspace
-  cmd: terraform
-  args:
-    - workspace
-    - show
-
-tf-plan:
-  envs:
-    dev:
-      desc: Terraform plan on dev
-      assert:
-        desc: Check if on dev workspace
-        ref: workspace # References goal above
-        expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
-      cmd: terraform
-      args:
-        - plan
-        - -var-file
-        - vars/dev.tfvars
-    stage:
-      desc: Terraform plan on stage
-      assert:
-        desc: Check if on stage workspace
-        ref: workspace # References goal above
-        expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
-      cmd: terraform
-      args:
-        - plan
-        - -var-file
-        - vars/stage.tfvars
-
-tf-apply:
-  envs:
-    dev:
-      desc: Terraform apply on dev
-      assert:
-        desc: Check if on dev workspace
-        ref: workspace # References goal above
-        expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
-      cmd: terraform
-      args:
-        - apply
-        - -var-file
-        - vars/dev.tfvars
-    stage:
-      desc: Terraform apply on stage
-      assert:
-        desc: Check if on stage workspace
-        ref: workspace # References goal above
-        expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
-      cmd: terraform
-      args:
-        - apply
-        - -var-file
-        - vars/stage.tfvars
-```
+### List goals
 
 Simply type `goal` to see list of available goals and their dependencies:
 
@@ -106,28 +50,62 @@ Available goals:
 +-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
 ```
 
-Let's see if _goal_ would allow us to apply terraform configuration on wrong environment:
+### Define simple local aliases
 
-```shell
-$ terraform workspace show
-dev
-$ goal tf-apply --on stage
-⚙️ Exec tf-apply-stage
-⌛ Check precondition: Check if on stage workspace
-❗ Precondition failed: workspace
-	Output:   "dev"
-	Expected: "stage"
-	CLI: terraform workspace show
+```yaml
+pods:
+  desc: Get nginx pods
+  cmd: kubectl
+  args:
+    - get
+    - pods
+    - -l
+    - app=nginx
+svc:
+  desc: Get nginx services
+  cmd: kubectl
+  args:
+    - get
+    - svc
+    - -l
+    - app=nginx
 ```
 
-## Idea behind
+### Define goal with assertions
 
-1. Local alias management  
-   To avoid typing repeatable commands
-2. AssD - Aliases as a Documentation :D  
-   No need to read through whole README file to start operating on you infrastructure
+```yaml
+# This example demonstrates how to use custom assertions upon executions.
+
+my-assertion:
+  desc: Get nginx pods
+  cmd: echo
+  args:
+    - -n
+    - $((40 + 2))
+  
+my-goal:
+  desc: The Answer to the Ultimate Question of Life
+  assert:
+    - desc: If answer is 42..
+      ref: my-assertion # reference another goal here
+      expect: '42'
+      fix: # CLI on how to fix
+  cmd: echo
+  args:
+    - The Answer to the Ultimate Question of Life, the Universe, and Everything is 42
+```
+
+### Built-in assertions
+
+| Tool      | Example                                  |
+|-----------|------------------------------------------|
+| kubectl   | [examples/kubectl](examples/kubectl)     |
+| helm      | [examples/helm](examples/helm)           |
+| terraform | [examples/terraform](examples/terraform) |
+| gcloud    | [examples/gcloud](examples/gcloud)       |
 
 ## goal vs Makefile
+_TODO_
 
 ## Project plan
 
@@ -159,3 +137,4 @@ $ goal tf-apply --on stage
 - [ ] `goal add GOAL_NAME` -- check if already exists
 - [ ] rework `Fatal` with `err`
 - [ ] suggest `fix?` when precondition failed with `yes/no` prompt
+- [ ] shared description from `goal.name` if there is no specific for env goal

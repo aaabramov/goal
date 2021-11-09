@@ -2,28 +2,29 @@
 
 ```shell
 $ terraform workspace new dev
+Created and switched to workspace "dev"!
+
 $ terraform workspace new stage
+Created and switched to workspace "stage"!
+
 $ goal
 Available goals:
-+-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
-|   GOAL    | ENVIRONMENT |              CLI               |         DESCRIPTION         |           ASSERTIONS           |
-+-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
-| tf-plan   | dev         | terraform plan -var-file       | Terraform plan on dev       | [workspace] Check if on dev    |
-|           |             | vars/dev.tfvars                |                             | workspace                      |
-+-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
-| tf-plan   | stage       | terraform plan -var-file       | Terraform plan on stage     | [workspace] Check if on stage  |
-|           |             | vars/stage.tfvars              |                             | workspace                      |
-+-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
-| tf-apply  | dev         | terraform apply -var-file      | Terraform apply on dev      | [workspace] Check if on dev    |
-|           |             | vars/dev.tfvars                |                             | workspace                      |
-+-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
-| tf-apply  | stage       | terraform apply -var-file      | Terraform apply on stage    | [workspace] Check if on stage  |
-|           |             | vars/stage.tfvars              |                             | workspace                      |
-+-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
-| workspace |             | terraform workspace show       | Current terraform workspace |                                |
-+-----------+-------------+--------------------------------+-----------------------------+--------------------------------+
++-------+-------------+---------------------------------------------+--------------------------+--------------------------------------------------+
+| GOAL  | ENVIRONMENT |                     CLI                     |       DESCRIPTION        |                    ASSERTIONS                    |
++-------+-------------+---------------------------------------------+--------------------------+--------------------------------------------------+
+| apply | dev         | terraform apply -var-file vars/dev.tfvars   | Terraform apply on dev   | Check if selected terraform workspace is "dev"   |
++       +-------------+---------------------------------------------+--------------------------+--------------------------------------------------+
+|       | stage       | terraform apply -var-file vars/stage.tfvars | Terraform apply on stage | Check if selected terraform workspace is "stage" |
++-------+-------------+---------------------------------------------+--------------------------+--------------------------------------------------+
+| plan  | dev         | terraform plan -var-file vars/dev.tfvars    | Terraform plan on dev    | Check if selected terraform workspace is "dev"   |
++       +-------------+---------------------------------------------+--------------------------+--------------------------------------------------+
+|       | stage       | terraform plan -var-file vars/stage.tfvars  | Terraform plan on stage  | Check if selected terraform workspace is "stage" |
++-------+-------------+---------------------------------------------+--------------------------+--------------------------------------------------+
+
 $ terraform workspace show
 stage
+
+# Let's see if goal would allow us to apply terraform configuration on wrong environment:
 $ goal tf-plan --on dev
 Running on dev
 ⚙️  Exec tf-plan

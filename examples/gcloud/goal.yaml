@@ -1,0 +1,32 @@
+# This example combines two `goal` features:
+# 1. Environmental executions: `goal run ssh --on dev`
+# 2. Built-in `gcloud_project` assertions upon execution
+#    to prevent accidental runs on wrong environment.
+#
+# NOTE: list your projects with `gcloud projects list`
+#
+# Usage:
+#   goal run ssh --on dev
+#   goal run ssh --on stage
+ssh:
+  envs:
+    dev:
+      desc: SSH to dev
+      cmd: gcloud
+      args:
+        - compute
+        - ssh
+        - dev-vm
+        - --zone=us-central1-c
+      assert:
+        - gcloud_project: dev-project
+    stage:
+      desc: SSH to stage
+      cmd: gcloud
+      args:
+        - compute
+        - ssh
+        - stage-vm
+        - --zone=us-central1-c
+      assert:
+        - gcloud_project: stage-project

@@ -1,0 +1,25 @@
+# This example demonstrates simply local alias management.
+# Goals(aliases) defined in this file would be available only in
+# project directory.
+#
+# Usage:
+#   goal run pods
+#
+#   goal run svc
+
+pods:
+  desc: Get nginx pods
+  cmd: kubectl
+  args:
+    - get
+    - pods
+    - -l
+    - app=nginx
+svc:
+  desc: Get nginx svc
+  cmd: kubectl
+  args:
+    - get
+    - svc
+    - -l
+    - app=nginx

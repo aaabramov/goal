@@ -4,8 +4,15 @@
 #    to prevent accidental runs on wrong environment.
 #
 # NOTE: Your can list available `terraform` workspaces with `terraform workspace list`
+#
+# Usage:
+#   goal run plan --on dev
+#   goal run plan --on stage
+#
+#   goal run apply --on dev
+#   goal run apply --on stage
 
-tf-plan:
+plan:
   envs:
     dev:
       desc: Terraform plan on dev
@@ -26,7 +33,7 @@ tf-plan:
         - -var-file
         - vars/stage.tfvars
 
-tf-apply:
+apply:
   envs:
     dev:
       desc: Terraform apply on dev

@@ -4,8 +4,15 @@
 #    to prevent accidental runs on wrong environment.
 #
 # NOTE: Your can list available `kubectl` contexts with `kubectl config get-contexts`
+#
+# Usage:
+#   goal run dry-run --on dev
+#   goal run dry-run --on stage
+#
+#   goal run upgrade --on dev
+#   goal run upgrade --on stage
 
-helm-dry-run:
+dry-run:
   envs:
     dev:
       desc: Dry run upgrade on dev
@@ -36,7 +43,7 @@ helm-dry-run:
         - .
         - --dry-run
 
-helm-upgrade:
+upgrade:
   envs:
     dev:
       desc: Run upgrade on dev
