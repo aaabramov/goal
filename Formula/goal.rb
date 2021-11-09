@@ -5,21 +5,21 @@
 class Goal < Formula
   desc "Allows you to create local aliases withing directory/repository with proper assertions upon executions."
   homepage "https://github.com/aaabramov/goal"
-  version "0.0.9"
+  version "0.0.10"
   license "Apache-2.0"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.9/goal_0.0.9_darwin_amd64.tar.gz"
-      sha256 "c6a9f9e9f8488b4c4e041bfb4ca30839067d8749c38f326cc6a7ee483310859c"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.10/goal_0.0.10_darwin_amd64.tar.gz"
+      sha256 "4181a640b01155464ca2dcc5b8834dd051041f81361373120441a956261e5764"
 
       def install
         bin.install "goal"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.9/goal_0.0.9_darwin_arm64.tar.gz"
-      sha256 "caf1b10a15eb5239dc3d91412e42aa9afc342de76021b4648e82cc5abf05007b"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.10/goal_0.0.10_darwin_arm64.tar.gz"
+      sha256 "1b7a40b479aad1657b7e05cc3da4900c873f51ff8115c29a99101f4580075764"
 
       def install
         bin.install "goal"
@@ -29,16 +29,16 @@ class Goal < Formula
 
   on_linux do
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.9/goal_0.0.9_linux_arm64.tar.gz"
-      sha256 "43ee6158d3f26c155462e7e60b9ed44ea627b233d573a1c7676004f38e9203a2"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.10/goal_0.0.10_linux_arm64.tar.gz"
+      sha256 "25a1fc379715914f217d06759be98c41dbc028d9994d34fce7000666e7ec5d4c"
 
       def install
         bin.install "goal"
       end
     end
     if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.9/goal_0.0.9_linux_amd64.tar.gz"
-      sha256 "a7bcaac2d86166b4bb2f0042e67792d5ca69f794c420c7e2d0a9fbf946f9a78e"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.10/goal_0.0.10_linux_amd64.tar.gz"
+      sha256 "4a7cc9c3931e3afc44358fb1c8108960f3b483737bf2d48fdad47eca72f236aa"
 
       def install
         bin.install "goal"
