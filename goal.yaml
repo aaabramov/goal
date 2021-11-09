@@ -1,56 +1,32 @@
-workspace:
-  desc: Current terraform workspace
-  cmd: terraform
-  args:
-    - workspace
-    - show
-
-tf-plan:
-  envs:
-    dev:
-      desc: Terraform plan on dev
-      assert:
-        desc: Check if on dev workspace
-        ref: workspace # References goal above
-        expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
-      cmd: terraform
-      args:
-        - plan
-        - -var-file
-        - vars/dev.tfvars
-    stage:
-      desc: Terraform plan on stage
-      assert:
-        desc: Check if on stage workspace
-        ref: workspace # References goal above
-        expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
-      cmd: terraform
-      args:
-        - plan
-        - -var-file
-        - vars/stage.tfvars
-
 tf-apply:
   envs:
     dev:
-      desc: Terraform apply on dev
+      cmd: terraform
+      args:
+      - apply
+      - -var-file
+      - vars/dev.tfvars
       assert:
         desc: Check if on dev workspace
-        ref: workspace # References goal above
-        expect: dev    # Checks whether trimmed output from 'ref' goal is equal to "dev"
+        ref: workspace
+        expect: dev
+        fix: terraform workspace select dev
+      desc: Terraform apply on dev
+    stage:
       cmd: terraform
       args:
-        - apply
-        - -var-file
-        - vars/dev.tfvars
-    stage:
-      desc: Terraform apply on stage
+      - apply
+      - -var-file
+      - vars/stage.tfvars
       assert:
         desc: Check if on stage workspace
-        ref: workspace # References goal above
-        expect: stage  # Checks whether trimmed output from 'ref' goal is equal to "stage"
-      cmd: terraform
-      args:
-        - apply
-        - -var-file
-        - vars/stage.tfvars
+        ref: workspace
+        expect: stage
+        fix: terraform workspace select stage
+      desc: Terraform apply on stage
+workspace:
+  cmd: terraform
+  args:
+  - apply
+  - -var-file
+  - vars/dev.tfvars

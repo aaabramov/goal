@@ -24,17 +24,17 @@ func (a Assert) String() string {
 
 type YamlEnvGoal struct {
 	Cmd    string   `yaml:"cmd"`
-	Args   []string `yaml:"args"`
-	Assert *Assert  `yaml:"assert"`
+	Args   []string `yaml:"args,omitempty"`
+	Assert *Assert  `yaml:"assert,omitempty"`
 	Desc   string   `yaml:"desc"`
 }
 
 type YamlGoal struct {
-	Envs   *map[string]YamlEnvGoal `yaml:"envs"`
-	Cmd    string                  `yaml:"cmd"`
-	Args   []string                `yaml:"args"`
-	Assert *Assert                 `yaml:"assert"`
-	Desc   string                  `yaml:"desc"`
+	Envs   *map[string]YamlEnvGoal `yaml:"envs,omitempty"`
+	Cmd    string                  `yaml:"cmd,omitempty"`
+	Args   []string                `yaml:"args,omitempty"`
+	Assert *Assert                 `yaml:"assert,omitempty"`
+	Desc   string                  `yaml:"desc,omitempty"`
 }
 
 type Command struct {
@@ -200,10 +200,27 @@ func normalizeArgs(args []string) []string {
 	}
 }
 
+func validateAssert(name string, env string, assert *Assert) {
+	if assert == nil {
+		return
+	}
+	if assert.Ref == "" {
+		if env == "" {
+			Fatal("Malformed goals. %s.assert.ref could not be empty", name)
+		} else {
+			Fatal("Malformed goals. %s.%s.assert.ref could not be empty", name, env)
+		}
+	}
+}
+
 func parseEnvCommands(name string, envs map[string]YamlEnvGoal) []Command {
 	var commands []Command
 	for env, envCommand := range envs {
 		args := normalizeArgs(envCommand.Args)
+		if envCommand.Cmd == "" {
+			Fatal("Malformed goals. %s.%s.cmd could not be empty", name, env)
+		}
+		validateAssert(name, env, envCommand.Assert)
 		commands = append(commands, Command{
 			Name:   name,
 			Cmd:    envCommand.Cmd,
@@ -228,6 +245,7 @@ func ParseCommands(bytes []byte) (*Commands, error) {
 		if command.Envs != nil {
 			res = append(res, parseEnvCommands(name, *command.Envs)...)
 		} else {
+			validateAssert(name, "", command.Assert)
 			args := normalizeArgs(command.Args)
 			res = append(res, Command{
 				Name:   name,

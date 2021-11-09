@@ -135,6 +135,9 @@ $ goal tf-apply --on stage
 - [X] Add `assert.fix`. Display when assertion failed, e.g. `terraform workspace select dev`
 - [X] Add "environment" management to avoid tf-plan-dev, tf-plan-stage, tf-plan-prod, etc. E.g. `goal tf-apply --on dev` & `goal.env: dev` matches
 - [X] Support `-f my-goal.yaml`
+- [X] Validate empty goal cmd
+- [X] Validate empty assertion ref
+- [X] Add `goal init` which simply generated example `goal.yaml`
 - [ ] Simpler `brew tap aaabramov/goal`
 - [ ] Manual approvals for proceeding like `assert.approval`
 - [ ] Add "depends on" other task like switch to dev?
@@ -146,6 +149,6 @@ $ goal tf-apply --on stage
 - [ ] Global aliases in `$HOME` directory?
 - [ ] Self-autocompletion via [https://github.com/posener/complete](complete) library
 - [ ] Support both goal.yaml & goal.yml
-- [ ] Add `goal init` which simply generated example `goal.yaml`
 - [ ] Generate simple markdown file from `goal.yaml` (ops-doc)
 - [ ] Add predefined assertions like `k8s_cluster`, `terraform_workspace`, `etc.`
+- [ ] `goal add GOAL_NAME` -- check if already exists
