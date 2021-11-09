@@ -23,37 +23,109 @@ func init() {
 }
 
 var defaultGoals = map[string]lib.YamlGoal{
-	"workspace": {
-		Cmd:    "terraform",
-		Args:   []string{"apply", "-var-file", "vars/dev.tfvars"},
+	"test": {
+		Desc:   "Run go tests",
+		Cmd:    "go",
+		Args:   []string{"test", "-v", "./..."},
 		Assert: nil,
 	},
-	"tf-apply": {
+	"terraform-workspace": {
+		Desc:   "Current terraform workspace",
+		Cmd:    "terraform",
+		Args:   []string{"workspace", "show"},
+		Assert: nil,
+	},
+	"terraform-apply": {
+		Desc: "See https://github.com/aaabramov/goal/tree/master/examples/terraform",
 		Envs: &map[string]lib.YamlEnvGoal{
 			"dev": {
 				Desc: "Terraform apply on dev",
 				Cmd:  "terraform",
 				Args: []string{"apply", "-var-file", "vars/dev.tfvars"},
-				Assert: []lib.Assert{
+				Assert: []lib.YamlAssert{
 					{
-						Desc:   "Check if on dev workspace",
-						Ref:    "workspace",
-						Expect: "dev",
-						Fix:    "terraform workspace select dev",
+						TerraformWorkspace: "dev",
 					}},
 			},
 			"stage": {
 				Desc: "Terraform apply on stage",
 				Cmd:  "terraform",
 				Args: []string{"apply", "-var-file", "vars/stage.tfvars"},
-				Assert: []lib.Assert{
+				Assert: []lib.YamlAssert{
 					{
-						Desc:   "Check if on stage workspace",
-						Ref:    "workspace",
-						Expect: "stage",
-						Fix:    "terraform workspace select stage",
+						TerraformWorkspace: "stage",
 					},
 				},
+			},
+		},
+	},
+	"k8s-apply": {
+		Desc: "See https://github.com/aaabramov/goal/tree/master/examples/kubectl",
+		Envs: &map[string]lib.YamlEnvGoal{
+			"dev": {
+				Desc: "kubectl apply on dev",
+				Cmd:  "kubectl",
+				Args: []string{"apply", "-f", "deployment.yaml"},
+				Assert: []lib.YamlAssert{
+					{
+						KubectlContext: "gke_project_region_dev",
+					}},
+			},
+			"stage": {
+				Desc: "kubectl apply on stage",
+				Cmd:  "kubectl",
+				Args: []string{"apply", "-f", "deployment.yaml"},
+				Assert: []lib.YamlAssert{
+					{
+						KubectlContext: "gke_project_region_stage",
+					},
+				},
+			},
+		},
+	},
+	"helm-upgrade": {
+		Desc: "See https://github.com/aaabramov/goal/tree/master/examples/helm",
+		Envs: &map[string]lib.YamlEnvGoal{
+			"dev": {
+				Desc: "helm upgrade on dev",
+				Cmd:  "helm",
+				Args: []string{"upgrade", "release-name", "-f", "values.yaml", "-f", "values/dev.yaml", "."},
+				Assert: []lib.YamlAssert{
+					{
+						KubectlContext: "gke_project_region_dev",
+					}},
+			},
+			"stage": {
+				Desc: "helm upgrade on stage",
+				Cmd:  "helm",
+				Args: []string{"upgrade", "release-name", "-f", "values.yaml", "-f", "values/stage.yaml", "."},
+				Assert: []lib.YamlAssert{
+					{
+						KubectlContext: "gke_project_region_stage",
+					}},
+			},
+		},
+	},
+	"gcloud-ssh": {
+		Desc: "See https://github.com/aaabramov/goal/tree/master/examples/gcloud",
+		Envs: &map[string]lib.YamlEnvGoal{
+			"dev": {
+				Desc: "SSH to dev",
+				Cmd:  "gcloud",
+				Args: []string{"compute", "ssh", "dev-vm", "--zone=us-central1-c"},
+				Assert: []lib.YamlAssert{
+					{
+						GcloudProject: "dev-project",
+					}},
+			},
+			"stage": {
+				Desc: "SSH to stage",
+				Cmd:  "gcloud",
+				Args: []string{"compute", "ssh", "stage-vm", "--zone=us-central1-c"},
+				Assert: []lib.YamlAssert{
+					{
+						GcloudProject: "stage-project",
+					}},
 			},
 		},
 	},
