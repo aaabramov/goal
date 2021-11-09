@@ -25,7 +25,7 @@ func (a Assert) String() string {
 type YamlEnvGoal struct {
 	Cmd    string   `yaml:"cmd"`
 	Args   []string `yaml:"args,omitempty"`
-	Assert *Assert  `yaml:"assert,omitempty"`
+	Assert []Assert `yaml:"assert,omitempty"`
 	Desc   string   `yaml:"desc"`
 }
 
@@ -33,7 +33,7 @@ type YamlGoal struct {
 	Envs   *map[string]YamlEnvGoal `yaml:"envs,omitempty"`
 	Cmd    string                  `yaml:"cmd,omitempty"`
 	Args   []string                `yaml:"args,omitempty"`
-	Assert *Assert                 `yaml:"assert,omitempty"`
+	Assert []Assert                `yaml:"assert,omitempty"`
 	Desc   string                  `yaml:"desc,omitempty"`
 }
 
@@ -41,7 +41,7 @@ type Command struct {
 	Name   string
 	Cmd    string
 	Args   []string
-	Assert *Assert
+	Assert []Assert
 	Env    string
 	Desc   string
 }
@@ -124,8 +124,8 @@ func (c *Commands) Exec(name string, env string) {
 			msg += " on " + env
 		}
 		Info(msg)
-		if command.Assert != nil {
-			c.runAssertion(*command.Assert)
+		for _, assert := range command.Assert {
+			c.runAssertion(assert)
 		}
 
 		cmd := osexec.Command(command.Cmd, command.Args...)
@@ -169,16 +169,17 @@ func (c *Commands) Render() {
 		tablewriter.Colors{tablewriter.Normal},
 	)
 	for _, cmd := range c.Commands {
-		assertion := ""
-		if cmd.Assert != nil {
-			ref, exists := c.get(cmd.Assert.Ref)
+		var assertions []string
+
+		for _, assert := range cmd.Assert {
+			ref, exists := c.get(assert.Ref)
 			if exists {
-				assertion = fmt.Sprintf("[%s] %s", ref.Name, cmd.Assert.Desc)
+				assertions = append(assertions, fmt.Sprintf("- [%s] %s", ref.Name, assert.Desc))
 			} else {
 
 			}
 		}
-		table.Append([]string{cmd.Name, cmd.Env, cmd.Cli(), cmd.Desc, assertion})
+		table.Append([]string{cmd.Name, cmd.Env, cmd.Cli(), cmd.Desc, strings.Join(assertions, "\n")})
 	}
 	table.Render()
 }
@@ -202,10 +203,15 @@ func normalizeArgs(args []string) []string {
 	}
 }
 
-func validateAssert(name string, env string, assert *Assert) {
-	if assert == nil {
-		return
+func normalizeAsserts(args []Assert) []Assert {
+	if args == nil {
+		return []Assert{}
+	} else {
+		return args
 	}
+}
+
+func validateAssert(name string, env string, assert Assert) {
 	if assert.Ref == "" {
 		if env == "" {
 			Fatal("Malformed goals. %s.assert.ref could not be empty", name)
@@ -222,13 +228,15 @@ func parseEnvCommands(name string, envs map[string]YamlEnvGoal) []Command {
 		if envCommand.Cmd == "" {
 			Fatal("Malformed goals. %s.%s.cmd could not be empty", name, env)
 		}
-		validateAssert(name, env, envCommand.Assert)
+		for _, assert := range envCommand.Assert {
+			validateAssert(name, env, assert)
+		}
 		commands = append(commands, Command{
 			Name:   name,
 			Cmd:    envCommand.Cmd,
 			Args:   args,
 			Desc:   envCommand.Desc,
-			Assert: envCommand.Assert,
+			Assert: normalizeAsserts(envCommand.Assert),
 			Env:    env,
 		})
 	}
@@ -247,7 +255,9 @@ func ParseCommands(bytes []byte) (*Commands, error) {
 		if command.Envs != nil {
 			res = append(res, parseEnvCommands(name, *command.Envs)...)
 		} else {
-			validateAssert(name, "", command.Assert)
+			for _, assert := range command.Assert {
+				validateAssert(name, "", assert)
+			}
 			args := normalizeArgs(command.Args)
 			res = append(res, Command{
 				Name:   name,

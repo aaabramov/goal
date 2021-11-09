@@ -3,30 +3,30 @@ tf-apply:
     dev:
       cmd: terraform
       args:
-      - apply
-      - -var-file
-      - vars/dev.tfvars
+        - apply
+        - -var-file
+        - vars/dev.tfvars
       assert:
-        desc: Check if on dev workspace
-        ref: workspace
-        expect: dev
-        fix: terraform workspace select dev
+        - desc: Check if on dev workspace
+          ref: workspace
+          expect: dev
+          fix: terraform workspace select dev
       desc: Terraform apply on dev
     stage:
       cmd: terraform
       args:
-      - apply
-      - -var-file
-      - vars/stage.tfvars
+        - apply
+        - -var-file
+        - vars/stage.tfvars
       assert:
-        desc: Check if on stage workspace
-        ref: workspace
-        expect: stage
-        fix: terraform workspace select stage
+        - desc: Check if on stage workspace
+          ref: workspace
+          expect: stage
+          fix: terraform workspace select stage
       desc: Terraform apply on stage
 workspace:
   cmd: terraform
   args:
-  - apply
-  - -var-file
-  - vars/dev.tfvars
+    - apply
+    - -var-file
+    - vars/dev.tfvars

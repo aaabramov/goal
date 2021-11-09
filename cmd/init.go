@@ -34,22 +34,25 @@ var defaultGoals = map[string]lib.YamlGoal{
 				Desc: "Terraform apply on dev",
 				Cmd:  "terraform",
 				Args: []string{"apply", "-var-file", "vars/dev.tfvars"},
-				Assert: &lib.Assert{
-					Desc:   "Check if on dev workspace",
-					Ref:    "workspace",
-					Expect: "dev",
-					Fix:    "terraform workspace select dev",
-				},
+				Assert: []lib.Assert{
+					{
+						Desc:   "Check if on dev workspace",
+						Ref:    "workspace",
+						Expect: "dev",
+						Fix:    "terraform workspace select dev",
+					}},
 			},
 			"stage": {
 				Desc: "Terraform apply on stage",
 				Cmd:  "terraform",
 				Args: []string{"apply", "-var-file", "vars/stage.tfvars"},
-				Assert: &lib.Assert{
-					Desc:   "Check if on stage workspace",
-					Ref:    "workspace",
-					Expect: "stage",
-					Fix:    "terraform workspace select stage",
+				Assert: []lib.Assert{
+					{
+						Desc:   "Check if on stage workspace",
+						Ref:    "workspace",
+						Expect: "stage",
+						Fix:    "terraform workspace select stage",
+					},
 				},
 			},
 		},

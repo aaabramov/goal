@@ -144,6 +144,7 @@ $ goal tf-apply --on stage
   - [ ] Recursive dependencies
 - [ ] Assertions
     - [X] ref output
+    - [X] support multiple assertions
     - [ ] recursive assertions?
     - [ ] raw CLI output -- bad pattern?
 - [ ] Global aliases in `$HOME` directory?
