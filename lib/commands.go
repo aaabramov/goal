@@ -153,6 +153,7 @@ func (c *Commands) Render() {
 	table.SetHeader([]string{"goal", "Environment", "CLI", "Description", "Assertions"})
 	table.SetRowLine(true)
 	table.SetAutoMergeCells(true)
+	table.SetAutoWrapText(false)
 	table.SetHeaderColor(
 		tablewriter.Colors{tablewriter.Bold},
 		tablewriter.Colors{tablewriter.Bold},
