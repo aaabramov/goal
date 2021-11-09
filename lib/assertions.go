@@ -72,7 +72,7 @@ type TerraformWorkspaceAssertion struct {
 }
 
 func (a TerraformWorkspaceAssertion) describe() string {
-	return fmt.Sprintf("Check if selected terraform workspace is %s", strconv.Quote(a.Expect))
+	return fmt.Sprintf("terraform.workspace == %s", strconv.Quote(a.Expect))
 }
 
 func (a TerraformWorkspaceAssertion) check(_ Goals) error {
@@ -104,7 +104,7 @@ type KubectlContextAssertion struct {
 }
 
 func (a KubectlContextAssertion) describe() string {
-	return fmt.Sprintf("Check if current kubectl context is %s", strconv.Quote(a.Expect))
+	return fmt.Sprintf("kubectl.context == %s", strconv.Quote(a.Expect))
 }
 
 func (a KubectlContextAssertion) check(_ Goals) error {
@@ -136,7 +136,7 @@ type GcloudProjectAssertion struct {
 }
 
 func (a GcloudProjectAssertion) describe() string {
-	return fmt.Sprintf("Check if current gcloud project context is %s", strconv.Quote(a.Expect))
+	return fmt.Sprintf("gcloud.project == %s", strconv.Quote(a.Expect))
 }
 
 func (a GcloudProjectAssertion) check(_ Goals) error {
