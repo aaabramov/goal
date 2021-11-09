@@ -1,7 +1,7 @@
+name: Check Examples
 on: [ push, pull_request ]
-name: Test
 jobs:
-  CheckExamples:
+  check:
     strategy:
       matrix:
         go-version: [ 1.17.x ]
