@@ -13,17 +13,20 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
 
+      - run: go version
+      - run: go env
+
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Test
-        run: go test -v -coverprofile=profile.cov ./...
+        run: go test '-coverprofile=profile.cov' -v ./...
 
       - name: Send coverage
         uses: shogo82148/actions-goveralls@v1
         with:
           path-to-profile: profile.cov
-          flag-name: Go-${{ matrix.go }}-OS-${{ matrix.os }}
+          flag-name: ${{ matrix.os }}-Go-${{ matrix.go }}
           parallel: true
   finish:
     needs: test
