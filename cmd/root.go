@@ -23,6 +23,7 @@ var rootCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
+			loadGoals()
 			commands.Render()
 		}
 	},
@@ -35,8 +36,6 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(loadGoals)
-
 	rootCmd.PersistentFlags().StringVarP(&goalFile, "config", "c", "goal.yaml", "goals file to use")
 }
 

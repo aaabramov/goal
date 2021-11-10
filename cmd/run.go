@@ -21,6 +21,9 @@ var runCmd = &cobra.Command{
 		}
 		return res, cobra.ShellCompDirectiveNoFileComp
 	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		loadGoals()
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {
 			commands.Exec(strings.TrimSpace(args[0]), env)

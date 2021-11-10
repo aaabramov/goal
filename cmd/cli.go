@@ -13,6 +13,9 @@ var cliCmd = &cobra.Command{
 	Use:   "cli GOAL [--on env]",
 	Short: "Show CLI for specific goal",
 	Args:  cobra.ExactArgs(1),
+	PreRun: func(cmd *cobra.Command, args []string) {
+		loadGoals()
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		goal := args[0]
 		if cmd, exists := commands.GetWithEnv(strings.TrimSpace(goal), env); exists {

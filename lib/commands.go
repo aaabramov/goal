@@ -51,12 +51,8 @@ func (c *Goals) get(name string) (*Goal, bool) {
 
 func (c *Goals) GetWithEnv(name string, env string) (*Goal, bool) {
 	for _, command := range c.Commands {
-		if command.Name == name {
-			if command.Env != "" && env != "" {
-				return &command, true
-			} else if command.Env == "" {
-				return &command, true
-			}
+		if command.Name == name && command.Env == env {
+			return &command, true
 		}
 	}
 	return nil, false
