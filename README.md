@@ -89,7 +89,7 @@ svc:
 # This example demonstrates how to use custom assertions upon executions.
 
 my-assertion:
-  desc: Get nginx pods
+  desc: Ultimate Question of Life?
   cmd: echo
   args:
     - -n
