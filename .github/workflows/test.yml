@@ -19,8 +19,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Test
-        run: go test -v -coverprofile=profile.cov ./...
+#      - name: Test
+#        run: go test -v -coverprofile=profile.cov ./...
 
       - name: Send coverage
         uses: shogo82148/actions-goveralls@v1
