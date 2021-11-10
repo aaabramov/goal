@@ -145,3 +145,4 @@ _TODO_
 - [ ] rework `Fatal` with `err`
 - [ ] suggest `fix?` when precondition failed with `yes/no` prompt
 - [ ] shared description from `goal.name` if there is no specific for env goal
+- [ ] add to readme about `source <(goal completion zsh)`
