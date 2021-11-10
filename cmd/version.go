@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const version = "0.0.11" // TODO: set during build
+const version = "0.0.12" // TODO: set during build
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
