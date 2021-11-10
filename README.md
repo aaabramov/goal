@@ -24,6 +24,12 @@ brew install aaabramov/goal/goal
 
 Run `goal init` in directory where aliases will be used. This will generate example `goal.yaml` file. Use it as a reference to define your own aliases. 
 
+```shell
+$ goal init
+⌛ Generating default goal.yaml file
+✅ Generated default goal.yaml file. Try running `goal` to see available goals.
+```
+
 ### List goals
 
 Simply type `goal` to see list of available goals and their dependencies:
