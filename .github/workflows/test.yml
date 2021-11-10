@@ -17,7 +17,18 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Test
-        run: go test -v ./...
+        run: go test -v -coverprofile=profile.cov ./...
 
-      - name: Build
-        run: go build
+      - name: Send coverage
+        uses: shogo82148/actions-goveralls@v1
+        with:
+          path-to-profile: profile.cov
+          flag-name: Go-${{ matrix.go }}-OS-${{ matrix.os }}
+          parallel: true
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: shogo82148/actions-goveralls@v1
+        with:
+          parallel-finished: true

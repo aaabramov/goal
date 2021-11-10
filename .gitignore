@@ -1,6 +1,8 @@
+# JetBrains
 .idea/
-goal
+
 # Binaries for programs and plugins
+goal
 *.exe
 *.exe~
 *.dll
@@ -12,6 +14,7 @@ goal
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+*.cov
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
