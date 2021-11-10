@@ -19,8 +19,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-#      - name: Test
-#        run: go test -v -coverprofile=profile.cov ./...
+      - name: Test
+        run: go test -v -coverprofile=profile.cov ./...
+        env:
+          GOPATH: ${{ github.workspace }}
 
       - name: Send coverage
         uses: shogo82148/actions-goveralls@v1
@@ -28,6 +30,8 @@ jobs:
           path-to-profile: profile.cov
           flag-name: ${{ matrix.os }}-Go-${{ matrix.go }}
           parallel: true
+        env:
+          GOPATH: ${{ github.workspace }}
   finish:
     needs: test
     runs-on: ubuntu-latest
