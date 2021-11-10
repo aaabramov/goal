@@ -19,5 +19,8 @@ jobs:
       - name: Build
         run: go build
 
-      - name: Check 'goal init'
-        run: ./goal init && ./goal
+      - name: Run './goal init'
+        run: ./goal init
+
+      - name: Check generated file
+        run: ./goal
