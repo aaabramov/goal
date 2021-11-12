@@ -3,6 +3,7 @@ package lib
 import (
 	"errors"
 	"fmt"
+	"github.com/manifoldco/promptui"
 	"strconv"
 	"strings"
 )
@@ -17,6 +18,7 @@ var availableAssertions = []string{
 	"terraform_workspace",
 	"kubectl_context",
 	"gcloud_project",
+	"approval",
 }
 
 // === CUSTOM
@@ -60,6 +62,37 @@ func (a RefAssertion) check(c Goals) error {
 		}
 	} else {
 		return errors.New("Unknown assertion ref: " + a.Ref)
+	}
+}
+
+// === INTERNAL
+
+// ApproveAssertion asks user whether to proceed to execution
+type ApproveAssertion struct{}
+
+func (a ApproveAssertion) describe() string {
+	return "Manual approval"
+}
+
+func (a ApproveAssertion) check(_ Goals) error {
+
+	prompt := promptui.Select{
+		Label: "Proceed?",
+		Items: []string{"yes", "no"},
+	}
+
+	_, result, err := prompt.Run()
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		return err
+	}
+
+	if result == "yes" {
+		Info("✅ Proceed approved.")
+		return nil
+	} else {
+		return errors.New("❌ Proceed aborted")
 	}
 }
 

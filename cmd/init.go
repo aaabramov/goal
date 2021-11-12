@@ -69,7 +69,11 @@ var defaultGoals = map[string]lib.YamlGoal{
 				Assert: []lib.YamlAssert{
 					{
 						KubectlContext: "gke_project_region_dev",
-					}},
+					},
+					{
+						Approval: "yes",
+					},
+				},
 			},
 			"stage": {
 				Desc: "kubectl apply on stage",
@@ -78,6 +82,9 @@ var defaultGoals = map[string]lib.YamlGoal{
 				Assert: []lib.YamlAssert{
 					{
 						KubectlContext: "gke_project_region_stage",
+					},
+					{
+						Approval: "yes",
 					},
 				},
 			},

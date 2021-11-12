@@ -72,7 +72,7 @@ func (c *Goals) Exec(name string, env string) {
 			if err := assert.check(*c); err != nil {
 				Fatal(err.Error())
 			}
-			Info("✅ Precondition: %s" + assert.describe())
+			Info("✅ Precondition: %s", assert.describe())
 		}
 
 		cmd := osexec.Command(command.Cmd, command.Args...)
@@ -118,8 +118,8 @@ func (c *Goals) Render() {
 	for _, cmd := range c.Commands {
 		var assertions []string
 
-		for _, assert := range cmd.Assert {
-			assertions = append(assertions, assert.describe())
+		for idx, assert := range cmd.Assert {
+			assertions = append(assertions, fmt.Sprintf("%d. %s", idx+1, assert.describe()))
 		}
 		table.Append([]string{cmd.Name, cmd.Env, cmd.Cli(), cmd.Desc, strings.Join(assertions, "\n")})
 	}
@@ -169,6 +169,8 @@ func mkAssertions(args []YamlAssert) (assertions []Assertion) {
 				assertions = append(assertions, GcloudProjectAssertion{
 					Expect: assertion.GcloudProject,
 				})
+			} else if assertion.Approval != "" {
+				assertions = append(assertions, ApproveAssertion{})
 			}
 		}
 		return assertions
@@ -177,11 +179,14 @@ func mkAssertions(args []YamlAssert) (assertions []Assertion) {
 
 func validateAssert(goal string, env string, idx int, assert YamlAssert) {
 	var err string
-	if assert.Ref == "" && assert.TerraformWorkspace == "" && assert.KubectlContext == "" && assert.GcloudProject == "" {
+	if assert.Ref == "" && assert.TerraformWorkspace == "" && assert.KubectlContext == "" && assert.GcloudProject == "" && assert.Approval == "" {
 		err = fmt.Sprintf("one of [%s] must be specified for asserion", strings.Join(availableAssertions, ", "))
 	}
+	if assert.Approval != "" && assert.Approval != "yes" {
+		err = fmt.Sprintf("for 'approval' assertion 'yes' must be explicitly set as a value: 'approval: yes', actual: 'approval: %s'", assert.Approval)
+	}
 	if assert.Ref != "" && assert.Expect == "" {
-		err = "for 'ref' assertions specify expected output in 'expect'"
+		err = "for 'ref' assertion specify expected output in 'expect'"
 	}
 
 	if err == "" {

@@ -3,10 +3,11 @@ package lib
 import "fmt"
 
 type YamlAssert struct {
-	Desc               string `yaml:"desc"`
+	Desc               string `yaml:"desc,omitempty"`
 	Ref                string `yaml:"ref,omitempty"`
-	Expect             string `yaml:"expect"`
-	Fix                string `yaml:"fix"`
+	Expect             string `yaml:"expect,omitempty"`
+	Fix                string `yaml:"fix,omitempty"`
+	Approval           string `yaml:"approval,omitempty"`
 	TerraformWorkspace string `yaml:"terraform_workspace,omitempty"`
 	KubectlContext     string `yaml:"kubectl_context,omitempty"`
 	GcloudProject      string `yaml:"gcloud_project,omitempty"`

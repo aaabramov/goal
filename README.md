@@ -37,29 +37,31 @@ Simply type `goal` to see list of available goals and their dependencies:
 ```shell
 $ goal
 Available goals:
-+---------------------+-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
-|        GOAL         | ENVIRONMENT |                               CLI                               |         DESCRIPTION         |                  ASSERTIONS                   |
-+---------------------+-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
-| gcloud-ssh          | dev         | gcloud compute ssh dev-vm --zone=us-central1-c                  | SSH to dev                  | gcloud.project == "dev-project"               |
-+                     +-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
-|                     | stage       | gcloud compute ssh stage-vm --zone=us-central1-c                | SSH to stage                | gcloud.project == "stage-project"             |
-+---------------------+-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
-| helm-upgrade        | dev         | helm upgrade release-name -f values.yaml -f values/dev.yaml .   | helm upgrade on dev         | kubectl.context == "gke_project_region_dev"   |
-+                     +-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
-|                     | stage       | helm upgrade release-name -f values.yaml -f values/stage.yaml . | helm upgrade on stage       | kubectl.context == "gke_project_region_stage" |
-+---------------------+-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
-| k8s-apply           | dev         | kubectl apply -f deployment.yaml                                | kubectl apply on dev        | kubectl.context == "gke_project_region_dev"   |
-+                     +-------------+                                                                 +-----------------------------+-----------------------------------------------+
-|                     | stage       |                                                                 | kubectl apply on stage      | kubectl.context == "gke_project_region_stage" |
-+---------------------+-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
-| terraform-apply     | dev         | terraform apply -var-file vars/dev.tfvars                       | Terraform apply on dev      | terraform.workspace == "dev"                  |
-+                     +-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
-|                     | stage       | terraform apply -var-file vars/stage.tfvars                     | Terraform apply on stage    | terraform.workspace == "stage"                |
-+---------------------+-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
-| terraform-workspace |             | terraform workspace show                                        | Current terraform workspace |                                               |
-+---------------------+-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
-| test                |             | go test -v ./...                                                | Run go tests                |                                               |
-+---------------------+-------------+-----------------------------------------------------------------+-----------------------------+-----------------------------------------------+
++---------------------+-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
+|        GOAL         | ENVIRONMENT |                               CLI                               |         DESCRIPTION         |                    ASSERTIONS                    |
++---------------------+-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
+| gcloud-ssh          | dev         | gcloud compute ssh dev-vm --zone=us-central1-c                  | SSH to dev                  | 1. gcloud.project == "dev-project"               |
++                     +-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
+|                     | stage       | gcloud compute ssh stage-vm --zone=us-central1-c                | SSH to stage                | 1. gcloud.project == "stage-project"             |
++---------------------+-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
+| helm-upgrade        | dev         | helm upgrade release-name -f values.yaml -f values/dev.yaml .   | helm upgrade on dev         | 1. kubectl.context == "gke_project_region_dev"   |
++                     +-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
+|                     | stage       | helm upgrade release-name -f values.yaml -f values/stage.yaml . | helm upgrade on stage       | 1. kubectl.context == "gke_project_region_stage" |
++---------------------+-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
+| k8s-apply           | dev         | kubectl apply -f deployment.yaml                                | kubectl apply on dev        | 1. kubectl.context == "gke_project_region_dev"   |
+|                     |             |                                                                 |                             | 2. Manual approval                               |
++                     +-------------+                                                                 +-----------------------------+--------------------------------------------------+
+|                     | stage       |                                                                 | kubectl apply on stage      | 1. kubectl.context == "gke_project_region_stage" |
+|                     |             |                                                                 |                             | 2. Manual approval                               |
++---------------------+-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
+| terraform-apply     | dev         | terraform apply -var-file vars/dev.tfvars                       | Terraform apply on dev      | 1. terraform.workspace == "dev"                  |
++                     +-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
+|                     | stage       | terraform apply -var-file vars/stage.tfvars                     | Terraform apply on stage    | 1. terraform.workspace == "stage"                |
++---------------------+-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
+| terraform-workspace |             | terraform workspace show                                        | Current terraform workspace |                                                  |
++---------------------+-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
+| test                |             | go test -v ./...                                                | Run go tests                |                                                  |
++---------------------+-------------+-----------------------------------------------------------------+-----------------------------+--------------------------------------------------+
 ```
 
 ### Define simple local aliases
@@ -102,6 +104,7 @@ my-goal:
       ref: my-assertion # references another goal
       expect: '42'
       fix: # CLI on how to fix
+    - approve: yes # ask user to config execution  
   cmd: echo
   args:
     - The Answer to the Ultimate Question of Life, the Universe, and Everything is 42
@@ -111,6 +114,7 @@ my-goal:
 
 | Tool      | Example                                  |
 |-----------|------------------------------------------|
+| approval  | [examples/kubectl](examples/kubectl)     |
 | kubectl   | [examples/kubectl](examples/kubectl)     |
 | helm      | [examples/helm](examples/helm)           |
 | terraform | [examples/terraform](examples/terraform) |
