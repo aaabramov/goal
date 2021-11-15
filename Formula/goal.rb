@@ -5,21 +5,21 @@
 class Goal < Formula
   desc "Allows you to create local aliases withing directory/repository with proper assertions upon executions."
   homepage "https://github.com/aaabramov/goal"
-  version "0.0.11"
+  version "0.0.12"
   license "Apache-2.0"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.11/goal_0.0.11_darwin_amd64.tar.gz"
-      sha256 "318fe634244bc64674e5dd1d878686d712624fbb891dc3f2879c55f7aa7837f4"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.12/goal_0.0.12_darwin_amd64.tar.gz"
+      sha256 "a90e19b7c2bda883106754d0a143e722e0794d5a2d09d9ab60a3ed391937396b"
 
       def install
         bin.install "goal"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.11/goal_0.0.11_darwin_arm64.tar.gz"
-      sha256 "ffb94dded21e24c3242950c11fb3ff30cbcd87e773d8552f407699aea5471e12"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.12/goal_0.0.12_darwin_arm64.tar.gz"
+      sha256 "586389815cc1be9c760aeb7563549869f112b9e25870781b549c1249d7effa8a"
 
       def install
         bin.install "goal"
@@ -29,16 +29,16 @@ class Goal < Formula
 
   on_linux do
     if Hardware::CPU.intel?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.11/goal_0.0.11_linux_amd64.tar.gz"
-      sha256 "8421c880417348ccdf065bbf31743a4e9c3f38c43e03fd6c06d09574c6965fa8"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.12/goal_0.0.12_linux_amd64.tar.gz"
+      sha256 "5b444e53f4b69a5e62da21ebc1e74383fa8493db3bdc9f42c3b885d30d66c036"
 
       def install
         bin.install "goal"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/aaabramov/goal/releases/download/0.0.11/goal_0.0.11_linux_arm64.tar.gz"
-      sha256 "458a85c9dee648575f0ef50bc7583bf13a6ea600db5682b35efacde72221d70b"
+      url "https://github.com/aaabramov/goal/releases/download/0.0.12/goal_0.0.12_linux_arm64.tar.gz"
+      sha256 "6e88983a2101fce9e1f00aeb15f21052be01c94d87283b3ceb35c3ac9d5aa2f0"
 
       def install
         bin.install "goal"
