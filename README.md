@@ -158,3 +158,4 @@ _TODO_
 - [ ] add to readme about `source <(goal completion zsh)`
 - [ ] `did you forget "--on env"` when command name is found but env is required
 - [ ] highlight commands & errors using https://github.com/fatih/color
+- [ ] templating env-dependant goals with {{ .Env }}?
