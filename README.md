@@ -2,6 +2,12 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/aaabramov/goal) [![Tests](https://github.com/aaabramov/goal/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/aaabramov/goal/actions/workflows/test.yml) [![Coverage Status](https://coveralls.io/repos/github/aaabramov/goal/badge.svg?branch=feature/coverage)](https://coveralls.io/github/aaabramov/goal?branch=feature/coverage) ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/aaabramov/goal)
 
+---
+
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua)
+
+---
+
 Allows you to create local aliases withing directory/repository with proper assertions upon executions.
 
 **Motivation:**
